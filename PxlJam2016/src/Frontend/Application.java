@@ -20,6 +20,10 @@ public class Application extends PApplet {
 		
 	}
 	
+	public void keyPressed() {
+		
+	}
+	
 	public void draw() {
 		
 	}
