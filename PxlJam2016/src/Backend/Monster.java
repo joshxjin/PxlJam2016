@@ -20,11 +20,8 @@ public class Monster extends GameObject {
 		this.speed = speed;
 		this.health = health;
 		this.size = 30;
-		
-		float tempHypot = (float)(Math.hypot((this.x - Player.getXX()), (this.y - Player.getYY())));
-		float ratio = speed / tempHypot;
-		dx = (Player.getXX() - this.x) * ratio;
-		dy = (Player.getYY() - this.y) * ratio;
+		this.dx = 0;
+		this.dy = 0;
 		
 		monsters.add(this);
 	}
