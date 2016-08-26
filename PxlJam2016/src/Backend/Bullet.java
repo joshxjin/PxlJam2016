@@ -1,11 +1,14 @@
 package Backend;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 
 public class Bullet extends GameObject {
 	private PApplet parent;
 	private float speed;
 	private int damage;
+	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
 	public Bullet(PApplet p, float playerX, float playerY, float mouseX, float mouseY) {
 		parent = p;
@@ -21,11 +24,21 @@ public class Bullet extends GameObject {
 		dx = (mouseX - playerX) * ratio;
 		dy = (mouseY - playerY) * ratio;
 		
+		bullets.add(this);
 	}
 	
-	public void move() {
-		this.x += dx;
-		this.y += dy;
+	public static void addBullet(PApplet p, float playerX, float playerY, float mouseX, float mouseY) {
+		Bullet b = new Bullet(p, playerX, playerY, mouseX, mouseY);
+	}
+	
+	public static void moveShowBullets() {
+		if (bullets.size() > 0) {
+			for (Bullet b : bullets) {
+				b.x += b.dx;
+				b.y += b.dy;
+				b.show();
+			}
+		}
 	}
 	
 	public void show() {

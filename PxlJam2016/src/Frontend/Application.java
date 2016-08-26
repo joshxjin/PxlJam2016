@@ -1,5 +1,6 @@
 package Frontend;
 
+import Backend.Bullet;
 import Backend.Player;
 import processing.core.PApplet;
 
@@ -17,12 +18,15 @@ public class Application extends PApplet {
 	}
 	
 	public void setup() {
-		
+		frameRate(60);
+	}
+	
+	public void mousePressed() {
+		Bullet.addBullet(this, player.getX(), player.getY(), mouseX, mouseY);
 	}
 	
 	public void keyPressed() {
 		player.setDir();
-		
 	}
 	
 	public void keyReleased(){
@@ -33,6 +37,7 @@ public class Application extends PApplet {
 		background(200);
 		player.move();
 		player.draw();
+		Bullet.moveShowBullets();
 	}
 
 }

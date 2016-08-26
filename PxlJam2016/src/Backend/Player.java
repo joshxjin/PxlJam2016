@@ -90,19 +90,4 @@ public class Player extends GameObject {
 		parent.ellipse(x,y,size,size);
 	}
 	
-	public void setX(float xx){
-		x = xx;
-	}
-	
-	public void setY(float yy){
-		y = yy;
-	}
-	
-	public float getX(){
-		return x;
-	}
-	
-	public float getY(){
-		return y;
-	}
 }
