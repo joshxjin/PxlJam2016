@@ -12,11 +12,11 @@ public class Bullet extends GameObject {
 	
 	public Bullet(PApplet p, float playerX, float playerY, float mouseX, float mouseY) {
 		parent = p;
-		damage = 10;
+		this.damage = 10;
 		size = 5;
 		x = playerX;
 		y = playerY;
-		speed = 5;
+		speed = 10;
 		
 		// Calculate speed for the bullet based on player position and mouse position
 		float tempHypot = (float)(Math.hypot((playerX - mouseX), (playerY - mouseY)));
