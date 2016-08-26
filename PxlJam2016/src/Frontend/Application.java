@@ -26,7 +26,7 @@ public class Application extends PApplet {
 	}
 	
 	public void keyReleased(){
-		
+		player.stopDir();
 	}
 	
 	public void draw() {
