@@ -15,6 +15,7 @@ public class Bullet extends GameObject {
 		y = playerY;
 		speed = 5;
 		
+		// Calculate speed for the bullet based on player position and mouse position
 		float tempHypot = (float)(Math.hypot((playerX - mouseX), (playerY - mouseY)));
 		float ratio = speed / tempHypot;
 		dx = (mouseX - playerX) * ratio;
@@ -28,10 +29,8 @@ public class Bullet extends GameObject {
 	}
 	
 	public void show() {
-		parent.fill(0);
+		parent.fill(255, 100, 100);
 		parent.ellipse(x, y, size, size);
 	}
-	
-	
 	
 }
