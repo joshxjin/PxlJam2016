@@ -28,11 +28,15 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		for (int i = 0; i < 10; i++) {
-			Monster m = new Monster(this, random(this.width), random(this.height), 2, 10);
-			gameObjects.add(m);
-		}
-
+//		for (int i = 0; i < 10; i++) {
+//			Monster m = new Monster(this, random(this.width), random(this.height), 2, 10);
+//			gameObjects.add(m);
+//		}
+		Monster m = new Monster(this, random(this.width), random(this.height), 2, 10);
+		Monster m0 = new Monster(this, random(this.width), random(this.height), 1, 10);
+		gameObjects.add(m);
+		gameObjects.add(m0);
+		
 		gameObjects.add(player);
 
 	}
@@ -59,12 +63,12 @@ public class Application extends PApplet {
 
 	public void draw() {
 		background(200);
-
+		Bullet.moveShowBullets();
 		checkCollision();
 
 		player.move();
 		player.draw();
-		Bullet.moveShowBullets();
+		
 		//Monster.moveMonsters(player.getX(), player.getY());
 		Monster.showMonsters();
 	}
@@ -85,13 +89,12 @@ public class Application extends PApplet {
 				Bullet b = (Bullet) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(b.getX() - returnList.get(j).getX(), b.getY() - returnList.get(j).getY()));
-					if (d <= b.getSize() + 10 + returnList.size() && !(returnList.get(j) instanceof Player)) {
+					if (d <= (b.getSize() + returnList.get(j).getSize())/2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
 							removeList.add(b);
 							removeList.add(returnList.get(j));
 							Bullet.getBullets().remove(b);
 							Monster.getMonsters().remove(returnList.get(j));
-							System.out.println("Collision!");
 						}
 					}
 				}
@@ -99,17 +102,9 @@ public class Application extends PApplet {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
-					if (d <= m.getSize() + 3 + returnList.size() && returnList.get(j) instanceof Player) {
+					if (d <= m.getSize() + returnList.get(j).getSize() && returnList.get(j) instanceof Player) {
 						System.out.println("Game Over!");
-					} else if (d <= m.getSize() + 3 + returnList.size() && returnList.get(j) instanceof Bullet) {
-						if (returnList.get(j) instanceof Monster) {
-							removeList.add(m);
-							removeList.add(returnList.get(j));
-							Bullet.getBullets().remove(m);
-							Monster.getMonsters().remove(returnList.get(j));
-							System.out.println("Collision!");
-						}
-					} else if (d <= m.getSize() + 3 + returnList.size() && returnList.get(j) instanceof Monster && returnList.get(j) != m) {
+					} else if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Monster && returnList.get(j) != m) {
 						break;
 					} else {
 						m.setMove(player.getX(), player.getY());
