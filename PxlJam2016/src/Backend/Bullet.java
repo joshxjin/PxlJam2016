@@ -27,23 +27,32 @@ public class Bullet extends GameObject {
 		bullets.add(this);
 	}
 	
-	public static void addBullet(PApplet p, float playerX, float playerY, float mouseX, float mouseY) {
+	public static Bullet addBullet(PApplet p, float playerX, float playerY, float mouseX, float mouseY) {
 		Bullet b = new Bullet(p, playerX, playerY, mouseX, mouseY);
+		return b;
 	}
 	
 	public static void moveShowBullets() {
 		if (bullets.size() > 0) {
 			for (Bullet b : bullets) {
-				b.x += b.dx;
-				b.y += b.dy;
+				b.move();
 				b.show();
 			}
 		}
 	}
 	
+	public void move() {
+		this.x += this.dx;
+		this.y += this.dy;
+	}
+	
 	public void show() {
 		parent.fill(255, 100, 100);
 		parent.ellipse(x, y, size, size);
+	}
+
+	public static ArrayList<Bullet> getBullets() {
+		return bullets;
 	}
 	
 }
