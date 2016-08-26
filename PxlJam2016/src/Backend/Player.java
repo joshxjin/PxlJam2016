@@ -7,7 +7,6 @@ public class Player extends GameObject {
 
 	PApplet parent;
 	float DX, DY;
-	static float x, y;
 
 	public Player(PApplet p, float xx, float yy, float speedx, float speedy) {
 		parent = p;
@@ -20,22 +19,16 @@ public class Player extends GameObject {
 
 	public void setDir() {
 		if (parent.key == PConstants.CODED) {
-			if (x - size <= 0 || x + size >= parent.width) {
-				dx = 0;
-			} else if (y - size <= 0 || y + size >= parent.height) {
-				dy = 0;
-			} else if (parent.keyCode == PConstants.UP) {
-				dy = -DY;
+			if (parent.keyCode == PConstants.UP) {
+					dy = -DY;
 			} else if (parent.keyCode == PConstants.DOWN) {
-				dy = DY;
+					dy = DY;
 			} else if (parent.keyCode == PConstants.LEFT) {
 				dx = -DX;
 			} else if (parent.keyCode == PConstants.RIGHT) {
 				dx = DX;
 			}
-		}
-
-		else {
+		} else {
 			if (parent.key == 'w') {
 				dy = -DY;
 			} else if (parent.key == 's') {
@@ -49,6 +42,22 @@ public class Player extends GameObject {
 	}
 
 	public void move() {
+		if (x - size <= 0) {
+			x = size + 1;
+		}
+		
+		if (x + size >= parent.width) {
+			x = parent.width - size - 1;
+		}
+		
+		if (y - size <= 0) {
+			y = size + 1;
+		}
+		
+		if (y + size >= parent.height) {
+			y = parent.height - size - 1;
+		}
+		
 		x = x + dx;
 		y = y + dy;
 	}
@@ -81,13 +90,5 @@ public class Player extends GameObject {
 		parent.fill(0);
 		parent.ellipse(x, y, size, size);
 	}
-	
-	public static float getXX() {
-		return x;
-	}
-	
-	public static float getYY() {
-		return y;
-	}
-	
+
 }
