@@ -11,15 +11,18 @@ public class Monster extends GameObject {
 	private static ArrayList<Monster> monsters = new ArrayList<Monster>();
 
 	float size;
+	float speed;
 
-	public Monster(PApplet p, float x, float y, float dx, float dy) {
+	public Monster(PApplet p, float x, float y, float speed, int health) {
 		this.parent = p;
 		this.x = x;
 		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
-		this.health = 3;
+		this.speed = speed;
+		this.health = health;
 		this.size = 30;
+		this.dx = 0;
+		this.dy = 0;
+		
 		monsters.add(this);
 	}
 
@@ -30,10 +33,12 @@ public class Monster extends GameObject {
 	public float getDY() {
 		return this.dy;
 	}
-
-	public void setMove(float dx, float dy) {
-		this.dx = dx;
-		this.dy = dy;
+	
+	public void setMove(float playerX, float playerY) {
+		float tempHypot = (float)(Math.hypot((this.x - playerX), (this.y - playerY)));
+		float ratio = this.speed / tempHypot;
+		this.dx = (playerX - this.x) * ratio;
+		this.dy = (playerY - this.y) * ratio;
 	}
 
 	public static ArrayList<Monster> getMonsters() {
@@ -47,8 +52,9 @@ public class Monster extends GameObject {
 		}
 	}
 
-	public static void moveMonsters() {
+	public static void moveMonsters(float playerX, float playerY) {
 		for (Monster o : monsters) {
+			o.setMove(playerX, playerY);
 			o.x = o.x + o.dx;
 			o.y = o.y + o.dy;
 		}
