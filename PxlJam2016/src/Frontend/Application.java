@@ -5,7 +5,7 @@ import processing.core.PApplet;
 
 public class Application extends PApplet {
 	
-	Player player = new Player();
+	Player player = new Player(this, 50, 50, 5, 5);
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -21,11 +21,18 @@ public class Application extends PApplet {
 	}
 	
 	public void keyPressed() {
+		player.setDir();
 		
 	}
 	
+	public void keyReleased(){
+		player.stopDir();
+	}
+	
 	public void draw() {
-		
+		background(200);
+		player.move();
+		player.draw();
 	}
 
 }

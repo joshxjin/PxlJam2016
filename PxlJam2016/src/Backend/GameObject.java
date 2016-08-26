@@ -2,6 +2,7 @@ package Backend;
 
 public class GameObject {
 	int health;
+	int size;
 	float x, y, dx, dy;
 	int size = 30;
 	public int getHealth() {
