@@ -21,14 +21,18 @@ public class Application extends PApplet {
 	}
 	
 	public void keyPressed() {
-		player.move();
+		player.setDir();
+		
+	}
+	
+	public void keyReleased(){
 		
 	}
 	
 	public void draw() {
 		background(200);
-		fill(0);
-		ellipse(player.getX(),player.getY(),30,30);
+		player.move();
+		player.draw();
 	}
 
 }
