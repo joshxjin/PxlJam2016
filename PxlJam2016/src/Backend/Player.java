@@ -29,13 +29,13 @@ public class Player extends GameObject {
 				dx = DX;
 			}
 		} else {
-			if (parent.key == 'w') {
+			if (parent.key == 'w' || parent.key == 'W') {
 				dy = -DY;
-			} else if (parent.key == 's') {
+			} else if (parent.key == 's' || parent.key == 'S') {
 				dy = DY;
-			} else if (parent.key == 'a') {
+			} else if (parent.key == 'a' || parent.key == 'A') {
 				dx = -DX;
-			} else if (parent.key == 'd') {
+			} else if (parent.key == 'd' || parent.key == 'D') {
 				dx = DX;
 			}
 		}
@@ -74,13 +74,13 @@ public class Player extends GameObject {
 				dx = 0;
 			}
 		} else {
-			if (parent.key == 'w') {
+			if (parent.key == 'w' || parent.key == 'W') {
 				dy = 0;
-			} else if (parent.key == 's') {
+			} else if (parent.key == 's' || parent.key == 'S') {
 				dy = 0;
-			} else if (parent.key == 'a') {
+			} else if (parent.key == 'a' || parent.key == 'A') {
 				dx = 0;
-			} else if (parent.key == 'd') {
+			} else if (parent.key == 'd' || parent.key == 'D') {
 				dx = 0;
 			}
 		}
