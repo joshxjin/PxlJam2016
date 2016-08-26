@@ -40,6 +40,11 @@ public class Monster extends GameObject {
 		this.dx = (playerX - this.x) * ratio;
 		this.dy = (playerY - this.y) * ratio;
 	}
+	
+	public void move() {
+		x += dx;
+		y += dy;
+	}
 
 	public static ArrayList<Monster> getMonsters() {
 		return monsters;
