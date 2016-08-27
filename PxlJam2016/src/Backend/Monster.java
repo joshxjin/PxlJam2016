@@ -13,21 +13,17 @@ public class Monster extends GameObject {
 	private static ArrayList<Monster> monsters = new ArrayList<Monster>();
 	private static ArrayList<Monster> deadMonsters = new ArrayList<Monster>();	//DC: added
 
-	float size;
-	float speed;
-	
 	int bounceCount;
 	int bounceMax = 20;
 	double spawnRate = 0.2;
 	
 	int deathTime = 10;		//DC: frames until ghost disappears
 
-	public Monster(PApplet p, float x, float y, float speed, int health) {
+	public Monster(PApplet p, float x, float y, float speed) {
 		this.parent = p;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
-		this.health = health;
 		this.size = 30;
 		this.dx = 0;
 		this.dy = 0;
@@ -187,4 +183,5 @@ public class Monster extends GameObject {
 			o.move();
 		}
 	}
+
 }

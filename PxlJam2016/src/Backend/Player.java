@@ -21,12 +21,12 @@ public class Player extends GameObject {
 	double tripleAngle = Math.PI/6;
 	int rapidDelay = 20;
 
-	public Player(PApplet p, float xx, float yy, float speedx, float speedy) {
+	public Player(PApplet p, float xx, float yy) {
 		parent = p;
 		x = xx;
 		y = yy;
-		DX = speedx;
-		DY = speedy;
+		DX = 5;
+		DY = 5;
 		size = 30;
 		angle = 0;
 		health = 3;
