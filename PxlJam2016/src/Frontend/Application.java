@@ -101,6 +101,7 @@ public class Application extends PApplet {
 							removeList.add(returnList.get(j));
 							Bullet.getBullets().remove(b);
 							Monster.getMonsters().remove(returnList.get(j));
+							break;
 						}
 					}
 				}
