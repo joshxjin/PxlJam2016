@@ -2,6 +2,7 @@ package Backend;
 
 import java.util.ArrayList;
 
+import Frontend.Application;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -106,6 +107,7 @@ public class Player extends GameObject {
 
 	public void draw() {
 		
+		
 		angle = -1*PApplet.atan2(parent.mouseX-x, parent.mouseY-y) + (float)Math.PI;
 		
 		parent.fill(0, 200);
@@ -113,7 +115,8 @@ public class Player extends GameObject {
 		parent.pushMatrix();
 		parent.translate(x,y);
 		parent.rotate(angle);
-		parent.ellipse(0, 0, size, size);
+//		parent.ellipse(0, 0, size, size);
+		parent.image(Application.shipPic, 0, 0); //IMAGE RELEVANT
 		parent.popMatrix();
 	}
 

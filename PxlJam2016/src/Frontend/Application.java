@@ -11,9 +11,13 @@ import Backend.Player;
 import Backend.QuadTree;
 import Backend.SnakeMonster;
 import processing.core.PApplet;
+import processing.core.PImage;//IMAGE RELEVANT
 
 public class Application extends PApplet {
 
+	public static PImage shipPic;//IMAGE RELEVANT
+	public static PImage monsterPic;//IMAGE RELEVANT
+	public static PImage snakeMonsterPic;//IMAGE RELEVANT
 	Player player = new Player(this, 450, 450, 5, 5);
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
@@ -44,6 +48,11 @@ public class Application extends PApplet {
 		Obstacle o = new Obstacle(this, 300, 300);
 		gameObjects.add(o);
 
+		monsterPic = loadImage("monster1.png");//IMAGE RELEVANT
+		snakeMonsterPic = loadImage("monster2.png");
+		shipPic = loadImage("AVerySillyShip2.png");//IMAGE RELEVANT
+		
+		
 	}
 
 	public void mousePressed() {
@@ -69,7 +78,8 @@ public class Application extends PApplet {
 		
 		Bullet.moveShowBullets();
 		checkCollision();
-
+		
+		imageMode(CENTER);//IMAGE RELEVANT
 		player.move();
 		player.draw();
 		

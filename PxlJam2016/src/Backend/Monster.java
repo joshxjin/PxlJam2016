@@ -2,6 +2,8 @@ package Backend;
 
 import java.util.ArrayList;
 
+import Frontend.Application;//IMAGE RELEVANT
+import Backend.SnakeMonster;//IMAGE RELEVANT
 import processing.core.PApplet;
 
 public class Monster extends GameObject {
@@ -53,7 +55,13 @@ public class Monster extends GameObject {
 	public static void showMonsters() {
 		for (Monster o : monsters) {
 			o.parent.fill(255);
-			o.parent.ellipse(o.x, o.y, o.size, o.size);
+			//o.parent.ellipse(o.x, o.y, o.size, o.size);
+			if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
+				o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
+			} else{//IMAGE RELEVANT
+				o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
+			}//IMAGE RELEVANT
+			
 		}
 	}
 
