@@ -45,6 +45,7 @@ public class Application extends PApplet {
 	int lastClick = 0;
 	boolean gameOver = false;
 	boolean mPressed = false;
+	boolean hydraGlitch = false;
 	
 	File gunShot;
 	File death1;
@@ -68,7 +69,7 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		player = new Player(this, 450, 450, 5, 5);
+		player = new Player(this, 450, 450);
 		gameObjects.add(player);
 
 		Levels.loadLevel(this, player, gameObjects, level);
@@ -119,7 +120,7 @@ public class Application extends PApplet {
 		// click to restart game.
 		if (gameOver) {
 			gameOver = false;
-			player = new Player(this, 450, 450, 5, 5);
+			player = new Player(this, 450, 450);
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
@@ -190,9 +191,14 @@ public class Application extends PApplet {
 		}
 		dImage.updatePixels();
 		
-		if (level % 3 == 0) {
+		if (level % 9 == 0) {
 			
+		} else if (level % 6 == 0) {
+			hydraGlitch = true;
+		} else if (level % 3 == 0) {
 			image(dImage, 450, 450);
+		} else if (level == 2) {
+			hydraGlitch = true;
 		}
 		
 		fill(0);
@@ -234,12 +240,13 @@ public class Application extends PApplet {
 
 		ArrayList<GameObject> returnList = new ArrayList<GameObject>();
 		ArrayList<GameObject> removeList = new ArrayList<GameObject>();
+		ArrayList<GameObject> newObjects = new ArrayList<GameObject>();
 
 		for (int i = 0; i < gameObjects.size(); i++) {
 
 			returnList.clear();
 			qt.retrieve(returnList, gameObjects.get(i));
-
+			
 			if (gameObjects.get(i) instanceof Bullet) {
 
 				Bullet b = (Bullet) gameObjects.get(i);
@@ -257,8 +264,16 @@ public class Application extends PApplet {
 							m.kill();										//so that kill method can be called
 							if (m instanceof SnakeMonster) {
 								playSound(death1);
+								if (hydraGlitch) {
+									SnakeMonster m1 = new SnakeMonster(this, m.getX(), m.getY(), m.getSpeed());
+									newObjects.add(m1);
+								}
 							} else {
 								playSound(death2);
+								if (hydraGlitch) {
+									Monster m1 = new Monster(this, m.getX(), m.getY(), m.getSpeed());
+									newObjects.add(m1);
+								}
 							}
 							break;
 						}
@@ -309,6 +324,10 @@ public class Application extends PApplet {
 			}
 
 		}
+		
+		if (!newObjects.isEmpty()) {
+			gameObjects.addAll(newObjects);
+		}
 
 		gameObjects.removeAll(removeList);
 
@@ -321,6 +340,8 @@ public class Application extends PApplet {
 			level++;
 			Levels.loadLevel(this, player, gameObjects, level);
 			spawnFrame = spawnFrame - 5;
+			if (hydraGlitch)
+				hydraGlitch = false;
 		}
 
 		// spawn monster
