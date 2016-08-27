@@ -45,6 +45,49 @@ public class Monster extends GameObject {
 		x += dx;
 		y += dy;
 	}
+	
+	//method to check collision with Obstacles and recalculate movement if needed
+	public void checkCollision(){
+		ArrayList<Obstacle> ob = Obstacle.getObstacles();
+		
+		boolean collision = false;
+		
+		//this is the movement vector
+		float x_move = 0;
+		float y_move = 0;
+		
+		for (int i = 0; i < ob.size(); i++){
+			
+			double xdiff = Math.abs(x - ob.get(i).getX());
+		    double ydiff = Math.abs(y - ob.get(i).getY());
+		    double obSize = ob.get(i).getSize();
+		    
+		    if (Math.hypot(xdiff, ydiff) > Math.sqrt(2)*obSize/2 + size/2) continue;
+
+		    //tests proximity to the edges
+		    if (xdiff <= (obSize/2 + size/2) && ydiff <= obSize/2) {
+		    	collision = true;
+		    	continue;
+		    	} 
+		    if (ydiff <= (obSize/2 + size/2) && xdiff <= obSize/2) {
+		    	collision = true;
+		    	continue;
+		    	}
+
+		    //tests proximity to the corner
+		    double cornerDist = Math.hypot(xdiff - obSize/2, ydiff - obSize/2);
+		    	//this is the distance from the circle centre to the rectangle corner
+
+		    if (cornerDist < size/2) {
+		    	collision = true; 
+		    	break;
+		    	}
+			}
+		
+		if (collision == false) return;
+		
+		
+	}
 
 	public static ArrayList<Monster> getMonsters() {
 		return monsters;
