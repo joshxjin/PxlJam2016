@@ -27,14 +27,14 @@ public class SpawnPoint extends GameObject {
 
 		if (sp.level >= 3) {
 			if (r.nextFloat() <= 0.3) {
-				SnakeMonster m = new SnakeMonster(p, sp.getX(), sp.getY(), (float) (2 + 0.1 * sp.level), 10);
+				SnakeMonster m = new SnakeMonster(p, sp.getX(), sp.getY(), (float) (2 + 0.1 * sp.level));
 				gameObjects.add(m);
 			} else {
-				Monster m = new Monster(p, sp.getX(), sp.getY(), (float) (2 + 0.2 * sp.level), 10);
+				Monster m = new Monster(p, sp.getX(), sp.getY(), (float) (2 + 0.2 * sp.level));
 				gameObjects.add(m);
 			}
 		} else {
-			Monster m = new Monster(p, sp.getX(), sp.getY(), (float) (2 + 0.2 * sp.level), 10);
+			Monster m = new Monster(p, sp.getX(), sp.getY(), (float) (2 + 0.2 * sp.level));
 			gameObjects.add(m);
 		}
 	}

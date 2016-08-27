@@ -2,7 +2,7 @@ package Backend;
 
 public class GameObject {
 	int health;
-	float x, y, dx, dy;
+	float x, y, dx, dy, speed;
 	int size = 30;
 
 	public int getHealth() {
@@ -51,6 +51,14 @@ public class GameObject {
 
 	public void setSize(int size) {
 		this.size = size;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 
 }

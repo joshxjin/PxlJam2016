@@ -46,15 +46,19 @@ public class Application extends PApplet {
 	int lastClick = 0;
 	boolean gameOver = false;
 	boolean mPressed = false;
+
 	
 	int score = 0;		//DC: added score counter
 	int snakeMonsterScore = 10;
 	int monsterScore = 5;
+
+	boolean hydraGlitch = false;
 	
 	File gunShot;
 	File death1;
 	File death2;
 	File explosion;
+	File backgroundMusic;
 	
 	double threshhold = 15;
 	Capture video;
@@ -73,7 +77,7 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		player = new Player(this, 450, 450, 5, 5);
+		player = new Player(this, 450, 450);
 		gameObjects.add(player);
 
 		Levels.loadLevel(this, player, gameObjects, level);
@@ -97,8 +101,10 @@ public class Application extends PApplet {
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
 		explosion = new File("src/explosion.wav");
-		video = new Capture(this, 800, 600);
+		backgroundMusic = new File("src/backgroundMusic.wav");
+		playBackground(backgroundMusic);
 		
+		video = new Capture(this, 800, 600);
 		video.start();
 		temp = createImage(800, 600, RGB);
 		dImage = createImage(800, 600, RGB);
@@ -108,6 +114,17 @@ public class Application extends PApplet {
 		temp.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
 		temp.updatePixels();
 		video.read();
+	}
+	
+	public void playBackground(File sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(sound));
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			Thread.sleep(10);
+		} catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 	
 	public void playSound(File sound) {
@@ -124,7 +141,7 @@ public class Application extends PApplet {
 		// click to restart game.
 		if (gameOver) {
 			gameOver = false;
-			player = new Player(this, 450, 450, 5, 5);
+			player = new Player(this, 450, 450);
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
@@ -195,9 +212,14 @@ public class Application extends PApplet {
 		}
 		dImage.updatePixels();
 		
-		if (level % 3 == 0) {
+		if (level % 9 == 0) {
 			
+		} else if (level % 6 == 0) {
+			hydraGlitch = true;
+		} else if (level % 3 == 0) {
 			image(dImage, 450, 450);
+		} else if (level == 2) {
+			hydraGlitch = true;
 		}
 		
 		fill(0);
@@ -243,12 +265,13 @@ public class Application extends PApplet {
 
 		ArrayList<GameObject> returnList = new ArrayList<GameObject>();
 		ArrayList<GameObject> removeList = new ArrayList<GameObject>();
+		ArrayList<GameObject> newObjects = new ArrayList<GameObject>();
 
 		for (int i = 0; i < gameObjects.size(); i++) {
 
 			returnList.clear();
 			qt.retrieve(returnList, gameObjects.get(i));
-
+			
 			if (gameObjects.get(i) instanceof Bullet) {
 
 				Bullet b = (Bullet) gameObjects.get(i);
@@ -267,9 +290,17 @@ public class Application extends PApplet {
 							if (m instanceof SnakeMonster) {
 								score += snakeMonsterScore;			//DC: increment score if monster killed
 								playSound(death1);
+								if (hydraGlitch) {
+									SnakeMonster m1 = new SnakeMonster(this, m.getX(), m.getY(), m.getSpeed());
+									newObjects.add(m1);
+								}
 							} else {
 								score += monsterScore;				//and here
 								playSound(death2);
+								if (hydraGlitch) {
+									Monster m1 = new Monster(this, m.getX(), m.getY(), m.getSpeed());
+									newObjects.add(m1);
+								}
 							}
 							break;
 						}
@@ -287,7 +318,7 @@ public class Application extends PApplet {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
-						player.setHealth(player.getHealth() - 1);
+						//player.setHealth(player.getHealth() - 1);
 						if (player.getHealth() == 0) {
 							gameOver = true;
 							textSize(30);
@@ -307,6 +338,7 @@ public class Application extends PApplet {
 							gameObjects.removeAll(Bullet.getBullets());
 							frameCount = levelFrame * (level - 1);
 						}
+						playSound(explosion);
 						Bullet.getBullets().clear();
 						Monster.getMonsters().clear();
 						PowerUp.getPowerUps().clear();
@@ -321,6 +353,10 @@ public class Application extends PApplet {
 			}
 
 		}
+		
+		if (!newObjects.isEmpty()) {
+			gameObjects.addAll(newObjects);
+		}
 
 		gameObjects.removeAll(removeList);
 
@@ -333,6 +369,8 @@ public class Application extends PApplet {
 			level++;
 			Levels.loadLevel(this, player, gameObjects, level);
 			spawnFrame = spawnFrame - 5;
+			if (hydraGlitch)
+				hydraGlitch = false;
 		}
 
 		// spawn monster
