@@ -1,5 +1,5 @@
 package Backend;
-
+  
 import java.util.ArrayList;
 
 import Frontend.Application;//IMAGE RELEVANT
