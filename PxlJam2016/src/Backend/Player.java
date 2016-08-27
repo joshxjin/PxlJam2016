@@ -1,7 +1,8 @@
 package Backend;
-
+  
 import java.util.ArrayList;
 
+import Frontend.Application;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -19,6 +20,7 @@ public class Player extends GameObject {
 		DY = speedy;
 		size = 30;
 		angle = 0;
+		health = 3;
 	}
 
 	public void setDir() {
@@ -133,8 +135,16 @@ public class Player extends GameObject {
 		}
 		gameObjects.add(b);
 	}
-
+	
+	public void drawPlayerHealth() { //IMAGE RELEVANT
+		for (int i = 0; i < this.health; i++){ //IMAGE RELEVANT
+			parent.fill(259, 0, 0); //IMAGE RELEVANT
+			parent.image(Application.heart, 45 + (30*i), 15); //IMAGE RELEVANT
+		} //IMAGE RELEVANT
+	} //IMAGE RELEVANT
+	
 	public void draw() {
+		
 		
 		angle = -1*PApplet.atan2(parent.mouseX-x, parent.mouseY-y) + (float)Math.PI;
 		
@@ -143,7 +153,8 @@ public class Player extends GameObject {
 		parent.pushMatrix();
 		parent.translate(x,y);
 		parent.rotate(angle);
-		parent.ellipse(0, 0, size, size);
+//		parent.ellipse(0, 0, size, size);
+		parent.image(Application.shipPic, 0, 0); //IMAGE RELEVANT
 		parent.popMatrix();
 	}
 

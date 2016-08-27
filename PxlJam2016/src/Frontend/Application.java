@@ -1,5 +1,5 @@
 package Frontend;
-
+  
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
@@ -11,9 +11,15 @@ import Backend.Player;
 import Backend.QuadTree;
 import Backend.SnakeMonster;
 import processing.core.PApplet;
+import processing.core.PImage;//IMAGE RELEVANT
 
 public class Application extends PApplet {
 
+	public static PImage shipPic;//IMAGE RELEVANT
+	public static PImage monsterPic;//IMAGE RELEVANT
+	public static PImage snakeMonsterPic;//IMAGE RELEVANT
+	public static PImage heart;//IMAGE RELEVANT
+	public static PImage rock; //IMAGE RELEVANT
 	Player player = new Player(this, 450, 450, 5, 5);
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
@@ -51,6 +57,12 @@ public class Application extends PApplet {
 		Obstacle o = new Obstacle(this, 300, 300);
 		gameObjects.add(o);
 
+		monsterPic = loadImage("monster1.png");//IMAGE RELEVANT
+		snakeMonsterPic = loadImage("monster2.png");//IMAGE RELEVANT
+		shipPic = loadImage("AVerySillyShip2.png");//IMAGE RELEVANT
+		heart = loadImage("heart.png");//IMAGE RELEVANT
+		rock = loadImage("definitelyARock.png"); //IMAGE RELEVANT
+		
 	}
 
 	public void mousePressed() {
@@ -74,9 +86,13 @@ public class Application extends PApplet {
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
 		
+		imageMode(CENTER);//IMAGE RELEVANT
+		
+		player.drawPlayerHealth();
+		
 		Bullet.moveShowBullets();
 		checkCollision();
-
+		
 		player.move();
 		player.draw();
 		
