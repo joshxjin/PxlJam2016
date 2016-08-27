@@ -11,6 +11,7 @@ import Backend.SnakeMonster;
 import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
+import Backend.SnakeMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
@@ -40,23 +41,23 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		for (int i = 0; i < 10; i++) {
-			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
-			gameObjects.add(m);
-		}
-		
-		Monster m = new Monster(this, 100, 100, 2, 10);
-		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
+//		for (int i = 0; i < 10; i++) {
+//			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
+//			gameObjects.add(m);
+//		}
+//		
+//		Monster m = new Monster(this, 100, 100, 2, 10);
+//		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
 
-		gameObjects.add(m);
-		gameObjects.add(m0);
+//		gameObjects.add(m);
+//		gameObjects.add(m0);
 		
 		gameObjects.add(player);
 		
-		Obstacle o = new Obstacle(this, 300, 300);
-		gameObjects.add(o);
+//		Obstacle o = new Obstacle(this, 300, 300);
+//		gameObjects.add(o);
 		
-		Levels.loadLevel(this, gameObjects, level);
+		Levels.loadLevel(this, player, gameObjects, level);
 
 		monsterPic = loadImage("monster1.png");//IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");//IMAGE RELEVANT
@@ -168,11 +169,11 @@ public class Application extends PApplet {
 	
 	public void levelSpawn() {
 		if (frameCount % 900 == 0) {
-			gameObjects.removeAll(Obstacle.getObstacles());
+			//gameObjects.removeAll(Obstacle.getObstacles());
 			SpawnPoint.getSpawnPoints().clear();
-			Obstacle.getObstacles().clear();
+			//Obstacle.getObstacles().clear();
 			level++;
-			Levels.loadLevel(this, gameObjects, level);
+			Levels.loadLevel(this, player, gameObjects, level);
 		}
 		
 		if (frameCount % 100 == 0) {
