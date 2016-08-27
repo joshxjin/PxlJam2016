@@ -55,7 +55,7 @@ public class Monster extends GameObject {
 	public static void showMonsters() {
 		for (Monster o : monsters) {
 			o.parent.fill(255);
-			//o.parent.ellipse(o.x, o.y, o.size, o.size);
+			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
 			if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
 				o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
 			} else{//IMAGE RELEVANT

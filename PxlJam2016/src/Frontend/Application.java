@@ -19,6 +19,7 @@ public class Application extends PApplet {
 	public static PImage monsterPic;//IMAGE RELEVANT
 	public static PImage snakeMonsterPic;//IMAGE RELEVANT
 	public static PImage heart;//IMAGE RELEVANT
+	public static PImage rock; //IMAGE RELEVANT
 	Player player = new Player(this, 450, 450, 5, 5);
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
@@ -53,6 +54,7 @@ public class Application extends PApplet {
 		snakeMonsterPic = loadImage("monster2.png");//IMAGE RELEVANT
 		shipPic = loadImage("AVerySillyShip2.png");//IMAGE RELEVANT
 		heart = loadImage("heart.png");//IMAGE RELEVANT
+		rock = loadImage("definitelyARock.png"); //IMAGE RELEVANT
 		
 	}
 
