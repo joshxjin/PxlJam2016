@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import Frontend.Application;
 import processing.core.PApplet;
-import processing.core.PConstants;
 
 public class Obstacle extends GameObject {
 

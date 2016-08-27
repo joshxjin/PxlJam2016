@@ -1,8 +1,8 @@
 package Backend;
 
-import java.util.List;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuadTree {
 

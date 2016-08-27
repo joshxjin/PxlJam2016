@@ -3,7 +3,6 @@ package Backend;
 import java.util.ArrayList;
 
 import Frontend.Application;//IMAGE RELEVANT
-import Backend.SnakeMonster;//IMAGE RELEVANT
 import processing.core.PApplet;
 
 public class Monster extends GameObject {

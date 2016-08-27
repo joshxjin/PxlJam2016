@@ -19,6 +19,7 @@ import Backend.SnakeMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
+import processing.video.Capture;
 
 public class Application extends PApplet {
 
@@ -42,6 +43,11 @@ public class Application extends PApplet {
 	File death1;
 	File death2;
 	File explosion;
+	
+	double threshhold = 15;
+	Capture video;
+	PImage temp;
+	PImage dImage;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -71,6 +77,17 @@ public class Application extends PApplet {
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
 		explosion = new File("src/explosion.wav");
+		video = new Capture(this, 800, 600);
+		
+		video.start();
+		temp = createImage(800, 600, RGB);
+		dImage = createImage(800, 600, RGB);
+	}
+	
+	public void captureEvent(Capture video) {
+		temp.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
+		temp.updatePixels();
+		video.read();
 	}
 	
 	public void playSound(File sound) {
@@ -133,6 +150,35 @@ public class Application extends PApplet {
 		
 		// draw background and border
 		background(255);
+		
+		temp.loadPixels();
+		dImage.loadPixels();
+		video.loadPixels();
+		
+		for (int x = 0; x < video.width; x++) {
+			for (int y = 0; y < video.height; y++) {
+				int loc = x + y * video.width;
+				float r1 = red(video.pixels[loc]);
+				float g1 = green(video.pixels[loc]);
+				float b1 = blue(video.pixels[loc]);
+				float r2 = red(temp.pixels[loc]);
+				float g2 = green(temp.pixels[loc]);
+				float b2 = blue(temp.pixels[loc]);
+				
+				double d = Math.sqrt(Math.pow(r1-r2, 2)+Math.pow(g1-g2, 2)+Math.pow(b1-b2, 2));
+				if (d < threshhold) {
+					dImage.pixels[loc] = color(255);
+				} else {
+					dImage.pixels[loc] = color(200);
+				}
+			}
+		}
+		dImage.updatePixels();
+		
+		if (level % 1 == 0) {
+			
+			image(dImage, 450, 450);
+		}
 		
 		fill(0);
 		rect(0, 0, 900, 30);
