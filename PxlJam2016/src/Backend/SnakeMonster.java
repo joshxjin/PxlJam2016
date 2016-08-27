@@ -6,8 +6,8 @@ public class SnakeMonster extends Monster{
 
 	private float time;
 	
-	public SnakeMonster(PApplet p, float x, float y, float speed, int health) {
-		super(p, x, y, speed, health);
+	public SnakeMonster(PApplet p, float x, float y, float speed) {
+		super(p, x, y, speed);
 		// TODO Auto-generated constructor stub
 		time = (float)Math.random()*59;
 	}
