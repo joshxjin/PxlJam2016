@@ -5,11 +5,12 @@ import java.util.ArrayList;
 
 import Backend.Bullet;
 import Backend.GameObject;
+import Backend.Levels;
 import Backend.Monster;
 import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
-import Backend.SnakeMonster;
+import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
 
@@ -23,6 +24,8 @@ public class Application extends PApplet {
 	Player player = new Player(this, 450, 450, 5, 5);
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
+	
+	int level = 1;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -56,6 +59,8 @@ public class Application extends PApplet {
 		
 		Obstacle o = new Obstacle(this, 300, 300);
 		gameObjects.add(o);
+		
+		Levels.loadLevel(this, gameObjects, level);
 
 		monsterPic = loadImage("monster1.png");//IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");//IMAGE RELEVANT
@@ -86,11 +91,17 @@ public class Application extends PApplet {
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
 		
+		levelSpawn();
+		
+		textAlign(LEFT);
+		textSize(10);
+		text("Frame: " + frameCount, 800, 60);
+		
 		imageMode(CENTER);//IMAGE RELEVANT
 		
 		player.drawPlayerHealth();
 		
-		Bullet.moveShowBullets();
+		Bullet.moveShowBullets(gameObjects);
 		checkCollision();
 		
 		player.move();
@@ -160,6 +171,20 @@ public class Application extends PApplet {
 
 		gameObjects.removeAll(removeList);
 
+	}
+	
+	public void levelSpawn() {
+		if (frameCount % 900 == 0) {
+			gameObjects.removeAll(Obstacle.getObstacles());
+			SpawnPoint.getSpawnPoints().clear();
+			Obstacle.getObstacles().clear();
+			level++;
+			Levels.loadLevel(this, gameObjects, level);
+		}
+		
+		if (frameCount % 100 == 0) {
+			SpawnPoint.spawn(this, gameObjects);
+		}
 	}
 
 }
