@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import Backend.Bullet;
 import Backend.GameObject;
 import Backend.Monster;
+import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
+import Backend.SnakeMonster;
 import processing.core.PApplet;
 
 public class Application extends PApplet {
@@ -20,7 +22,7 @@ public class Application extends PApplet {
 		PApplet.main("Frontend.Application");
 
 	}
-
+	
 	public void settings() {
 		size(900, 900);
 	}
@@ -28,29 +30,24 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-//		for (int i = 0; i < 10; i++) {
-//			Monster m = new Monster(this, random(this.width), random(this.height), 2, 10);
-//			gameObjects.add(m);
-//		}
-		Monster m = new Monster(this, random(this.width), random(this.height), 2, 10);
-		Monster m0 = new Monster(this, random(this.width), random(this.height), 1, 10);
+		for (int i = 0; i < 10; i++) {
+			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
+			gameObjects.add(m);
+		}
+		Monster m = new Monster(this, 100, 100, 2, 10);
+		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
 		gameObjects.add(m);
 		gameObjects.add(m0);
 		
 		gameObjects.add(player);
+		
+		Obstacle o = new Obstacle(this, 300, 300);
+		gameObjects.add(o);
 
 	}
 
 	public void mousePressed() {
-		Bullet b = null;
-
-		if (mouseButton == LEFT) {
-			b = Bullet.addBullet(this, player.getX(), player.getY(), mouseX, mouseY);
-		} else if (mouseButton == RIGHT) {
-			b = Bullet.addBullet(this, player.getX(), player.getY(), mouseX, mouseY);
-		}
-
-		gameObjects.add(b);
+		player.shoot(gameObjects);
 	}
 
 	public void keyPressed() {
@@ -62,7 +59,14 @@ public class Application extends PApplet {
 	}
 
 	public void draw() {
-		background(200);
+		background(255);
+		fill(0, 0, 0);
+		//noStroke();
+		rect(0, 0, 900, 30);
+		rect(0, 0, 30, 900);
+		rect(900 - 30, 0, 30, 900);
+		rect(0, 900 - 30, 900, 30);
+		
 		Bullet.moveShowBullets();
 		checkCollision();
 
@@ -71,6 +75,8 @@ public class Application extends PApplet {
 		
 		//Monster.moveMonsters(player.getX(), player.getY());
 		Monster.showMonsters();
+		
+		Obstacle.showObstacles();
 	}
 
 	public void checkCollision() {
