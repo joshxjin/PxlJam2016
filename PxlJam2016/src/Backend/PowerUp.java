@@ -70,6 +70,15 @@ public class PowerUp extends GameObject {
 		for (PowerUp o : powerups) {
 			o.setMove(playerX, playerY);
 			o.move();
+			if (o.x <=45){
+				o.x = 45;
+			} else if (o.x >= 855){
+				o.x = 855;
+			} else if (o.y <= 45){
+				o.y = 45;
+			} else if (o.y >= 855){
+				o.y = 855;
+			}
 		}
 	}
 	
