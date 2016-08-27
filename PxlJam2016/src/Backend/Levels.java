@@ -20,8 +20,8 @@ public class Levels {
 	public static void loadLevel(PApplet p, Player player, ArrayList<GameObject> gameObjects, int level) {
 		
 		for (int i = 0; i < 2; i++) {
-			float x = p.random(90, 900 - 90);
-			float y = p.random(90, 900 - 90);
+			float x = p.random(90, 900 - 45);
+			float y = p.random(90, 900 - 45);
 			float d = (float)(Math.hypot(x-player.getX(), y-player.getY()));
 			if (d <= (player.getSize()/2 + 15))
 				i--;
@@ -31,8 +31,13 @@ public class Levels {
 			}
 		}
 		sp1 = new SpawnPoint(p, 15, 15, level);
-		sp2 = new SpawnPoint(p, 900 - 15, 15, level);
-		sp3 = new SpawnPoint(p, 450, 900 - 15, level);
+		sp2 = new SpawnPoint(p, 450, 15, level);
+		sp3 = new SpawnPoint(p, 900 - 15, 15, level);
+		sp4 = new SpawnPoint(p, 15, 450, level);
+		sp5 = new SpawnPoint(p, 900 - 15, 450, level);
+		sp6 = new SpawnPoint(p, 15, 900 - 15, level);
+		sp7 = new SpawnPoint(p, 450, 900 - 15, level);
+		sp8 = new SpawnPoint(p, 900 - 15, 900 - 15, level);
 		
 	}
 }
