@@ -22,7 +22,7 @@ public class Monster extends GameObject {
 		this.size = 30;
 		this.dx = 0;
 		this.dy = 0;
-		
+
 		monsters.add(this);
 	}
 
@@ -33,14 +33,14 @@ public class Monster extends GameObject {
 	public float getDY() {
 		return this.dy;
 	}
-	
+
 	public void setMove(float playerX, float playerY) {
-		float tempHypot = (float)(Math.hypot((this.x - playerX), (this.y - playerY)));
+		float tempHypot = (float) (Math.hypot((this.x - playerX), (this.y - playerY)));
 		float ratio = this.speed / tempHypot;
 		this.dx = (playerX - this.x) * ratio;
 		this.dy = (playerY - this.y) * ratio;
 	}
-	
+
 	public void move() {
 		x += dx;
 		y += dy;
@@ -60,9 +60,7 @@ public class Monster extends GameObject {
 	public static void moveMonsters(float playerX, float playerY) {
 		for (Monster o : monsters) {
 			o.setMove(playerX, playerY);
-			o.x = o.x + o.dx;
-			o.y = o.y + o.dy;
+			o.move();
 		}
 	}
-
 }

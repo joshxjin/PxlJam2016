@@ -46,20 +46,20 @@ public class Player extends GameObject {
 	}
 
 	public void move() {
-		if (x - size <= 0) {
-			x = size + 1;
+		if (x - size * 2 <= 0) {
+			x = size * 2;
 		}
 		
-		if (x + size >= parent.width) {
-			x = parent.width - size - 1;
+		if (x + size * 2 >= parent.width) {
+			x = parent.width - size  * 2;
 		}
 		
-		if (y - size <= 0) {
-			y = size + 1;
+		if (y - size * 2 <= 0) {
+			y = size * 2;
 		}
 		
-		if (y + size >= parent.height) {
-			y = parent.height - size - 1;
+		if (y + size * 2 >= parent.height) {
+			y = parent.height - size * 2;
 		}
 		
 		x = x + dx;
