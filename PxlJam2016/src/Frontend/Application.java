@@ -7,12 +7,12 @@ import Backend.Bullet;
 import Backend.GameObject;
 import Backend.Levels;
 import Backend.Monster;
-import Backend.SnakeMonster;
 import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
 import Backend.SnakeMonster;
 import Backend.SpawnPoint;
+import Backend.PowerUp;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
 
@@ -65,6 +65,7 @@ public class Application extends PApplet {
 		heart = loadImage("heart.png");//IMAGE RELEVANT
 		rock = loadImage("definitelyARock.png"); //IMAGE RELEVANT
 		
+		PowerUp p1 = new PowerUp(this,200,200,3);
 	}
 
 	public void mousePressed() {
@@ -108,6 +109,8 @@ public class Application extends PApplet {
 		Monster.showMonsters();
 		
 		Obstacle.showObstacles();
+		
+		PowerUp.showPowerUps();		//DC: added power-up drawing method
 	}
 
 	public void checkCollision() {
