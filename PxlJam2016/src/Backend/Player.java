@@ -46,6 +46,9 @@ public class Player extends GameObject {
 	}
 
 	public void move() {
+		
+		ArrayList<Obstacle> ob = Obstacle.getObstacles();
+		
 		if (x - size * 2 <= 0) {
 			x = size * 2;
 		}
@@ -64,6 +67,33 @@ public class Player extends GameObject {
 		
 		x = x + dx;
 		y = y + dy;
+		
+		//DC: undo move if player collides with an obstacle
+		boolean collision = false;
+		
+		for (int i = 0; i < ob.size(); i++){
+			
+			double xdiff = Math.abs(x - ob.get(i).getX());
+		    double ydiff = Math.abs(y - ob.get(i).getY());
+		    double obSize = ob.get(i).getSize();
+		    
+		    if (Math.hypot(xdiff, ydiff) > Math.sqrt(2)*obSize/2 + size/2) continue;
+
+		    //tests proximity to the edges
+		    if (xdiff <= (obSize/2 + size/2) && ydiff <= obSize/2) {collision = true; break;} 
+		    if (ydiff <= (obSize/2 + size/2) && xdiff <= obSize/2) {collision = true; break;}
+
+		    //tests proximity to the corner
+		    double cornerDist = Math.hypot(xdiff - obSize/2, ydiff - obSize/2);
+		    	//this is the distance from the circle centre to the rectangle corner
+
+		    if (cornerDist < size/2) {collision = true; break;}
+			}
+		
+		if (collision){
+			x = x - dx;
+			y = y - dy;
+		}
 	}
 
 	public void stopDir() {
