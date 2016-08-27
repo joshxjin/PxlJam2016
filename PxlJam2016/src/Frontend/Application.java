@@ -29,7 +29,7 @@ public class Application extends PApplet {
 	int level = 1;
 	int levelFrame = 900;
 	int spawnFrame = 100;
-	int lastClick;
+	int lastClick = 0;
 	boolean gameOver = false;
 	boolean mPressed = false;
 
@@ -70,11 +70,14 @@ public class Application extends PApplet {
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
+			lastClick = 0;
 			return;
 		}
 		
-		lastClick = frameCount;
-		player.shoot(gameObjects);
+		if (frameCount - lastClick >= 15) {
+			lastClick = frameCount;
+			player.shoot(gameObjects);
+		}
 		mPressed = true;
 	}
 	
@@ -187,8 +190,6 @@ public class Application extends PApplet {
 							text("Game Over!", 450, 450);
 							textSize(18);
 							text("Click mouse to restart.", 450, 470);
-							Bullet.getBullets().clear();
-							Monster.getMonsters().clear();
 							Obstacle.getObstacles().clear();
 							SpawnPoint.getSpawnPoints().clear();
 							gameObjects.clear();
@@ -197,10 +198,11 @@ public class Application extends PApplet {
 							player.setY(450);
 							gameObjects.removeAll(Monster.getMonsters());
 							gameObjects.removeAll(Bullet.getBullets());
-							Monster.getMonsters().clear();
-							Bullet.getBullets().clear();
 							frameCount = levelFrame * (level - 1);
 						}
+						Bullet.getBullets().clear();
+						Monster.getMonsters().clear();
+						lastClick = 0;
 						return;
 					} else { // DC: removed Monster/Monster collision check
 						m.setMove(player.getX(), player.getY());
