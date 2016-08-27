@@ -10,7 +10,6 @@ import Backend.Monster;
 import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
-import Backend.SnakeMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
@@ -22,14 +21,16 @@ public class Application extends PApplet {
 	public static PImage snakeMonsterPic;// IMAGE RELEVANT
 	public static PImage heart;// IMAGE RELEVANT
 	public static PImage rock; // IMAGE RELEVANT
-	Player player = new Player(this, 450, 450, 5, 5);
+	Player player;
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
 
 	int level = 1;
 	int levelFrame = 900;
 	int spawnFrame = 100;
+	int lastClick;
 	boolean gameOver = false;
+	boolean mPressed = false;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -43,23 +44,8 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		// for (int i = 0; i < 10; i++) {
-		// Monster m = new Monster(this, random(this.width),
-		// random(this.height), 1, 10);
-		// gameObjects.add(m);
-		// }
-		//
-		// Monster m = new Monster(this, 100, 100, 2, 10);
-		// Monster m0 = new SnakeMonster(this, random(this.width),
-		// random(this.height), 1, 10);
-
-		// gameObjects.add(m);
-		// gameObjects.add(m0);
-
+		player = new Player(this, 450, 450, 5, 5);
 		gameObjects.add(player);
-
-		// Obstacle o = new Obstacle(this, 300, 300);
-		// gameObjects.add(o);
 
 		Levels.loadLevel(this, player, gameObjects, level);
 
@@ -83,7 +69,14 @@ public class Application extends PApplet {
 			spawnFrame = 100;
 			return;
 		}
+		lastClick = frameCount;
 		player.shoot(gameObjects);
+		mPressed = true;
+		
+	}
+	
+	public void mouseReleased() {
+		mPressed = false;
 	}
 
 	public void keyPressed() {
@@ -98,9 +91,13 @@ public class Application extends PApplet {
 		if (gameOver) {
 			return;
 		}
+		
+		if (mPressed && frameCount - lastClick > 20) {
+			lastClick = frameCount;
+			player.shoot(gameObjects);
+		}
 		background(255);
 		fill(0, 0, 0);
-		// noStroke();
 		rect(0, 0, 900, 30);
 		rect(0, 0, 30, 900);
 		rect(900 - 30, 0, 30, 900);
@@ -151,8 +148,7 @@ public class Application extends PApplet {
 					float d = (float) (Math.hypot(b.getX() - returnList.get(j).getX(),
 							b.getY() - returnList.get(j).getY()));
 
-					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player)
-							&& !(returnList.get(j) instanceof Bullet)) {
+					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
 							removeList.add(b);
 							removeList.add(returnList.get(j));
@@ -168,9 +164,7 @@ public class Application extends PApplet {
 						}
 					}
 				}
-			}
-
-			else if (gameObjects.get(i) instanceof Monster) {
+			} else if (gameObjects.get(i) instanceof Monster) {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
