@@ -1,5 +1,7 @@
 package Backend;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -7,6 +9,7 @@ public class Player extends GameObject {
 
 	PApplet parent;
 	float DX, DY;
+	float angle;
 
 	public Player(PApplet p, float xx, float yy, float speedx, float speedy) {
 		parent = p;
@@ -15,6 +18,7 @@ public class Player extends GameObject {
 		DX = speedx;
 		DY = speedy;
 		size = 30;
+		angle = 0;
 	}
 
 	public void setDir() {
@@ -85,10 +89,32 @@ public class Player extends GameObject {
 			}
 		}
 	}
+	
+	public void shoot(ArrayList<GameObject> gameObjects){
+		Bullet b = null;
+		
+		float xStart = (float)(x + (size/2)*Math.sin(angle));
+		float yStart = (float)(y - (size/2)*Math.cos(angle));
+
+		if (parent.mouseButton == PConstants.LEFT) {
+			b = Bullet.addBullet(parent, xStart, yStart, parent.mouseX, parent.mouseY);
+		} else if (parent.mouseButton == PConstants.RIGHT) {
+			b = Bullet.addBullet(parent, xStart, yStart, parent.mouseX, parent.mouseY);
+		}
+		gameObjects.add(b);
+	}
 
 	public void draw() {
-		parent.fill(0);
-		parent.ellipse(x, y, size, size);
+		
+		angle = -1*PApplet.atan2(parent.mouseX-x, parent.mouseY-y) + (float)Math.PI;
+		
+		parent.fill(0, 200);
+		
+		parent.pushMatrix();
+		parent.translate(x,y);
+		parent.rotate(angle);
+		parent.ellipse(0, 0, size, size);
+		parent.popMatrix();
 	}
 
 }
