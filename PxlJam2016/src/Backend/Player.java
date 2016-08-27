@@ -1,5 +1,5 @@
 package Backend;
-  
+
 import java.util.ArrayList;
 
 import Frontend.Application;
@@ -56,56 +56,68 @@ public class Player extends GameObject {
 	}
 
 	public void move() {
+
 		
 		//counting down the speed boost
 		if(speedTimer == 1) speedScale = 0;
 		if(speedTimer > 0) speedTimer--;
 		if(tripleFireTimer > 0) tripleFireTimer--;
-		
+
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
-		
+
 		if (x - size * 2 <= 0) {
 			x = size * 2;
 		}
-		
+
 		if (x + size * 2 >= parent.width) {
-			x = parent.width - size  * 2;
+			x = parent.width - size * 2;
 		}
-		
+
 		if (y - size * 2 <= 0) {
 			y = size * 2;
 		}
-		
+
 		if (y + size * 2 >= parent.height) {
 			y = parent.height - size * 2;
 		}
-		
+
 		x = x + dx;
 		y = y + dy;
-		
-		//DC: undo move if player collides with an obstacle
+
+		// DC: undo move if player collides with an obstacle
 		boolean collision = false;
-		
-		for (int i = 0; i < ob.size(); i++){
-			
+
+		for (int i = 0; i < ob.size(); i++) {
+
 			double xdiff = Math.abs(x - ob.get(i).getX());
-		    double ydiff = Math.abs(y - ob.get(i).getY());
-		    double obSize = ob.get(i).getSize();
-		    
-		    if (Math.hypot(xdiff, ydiff) > Math.sqrt(2)*obSize/2 + size/2) continue;
+			double ydiff = Math.abs(y - ob.get(i).getY());
+			double obSize = ob.get(i).getSize();
 
-		    //tests proximity to the edges
-		    if (xdiff <= (obSize/2 + size/2) && ydiff <= obSize/2) {collision = true; break;} 
-		    if (ydiff <= (obSize/2 + size/2) && xdiff <= obSize/2) {collision = true; break;}
+			if (Math.hypot(xdiff, ydiff) > Math.sqrt(2) * obSize / 2 + size / 2)
+				continue;
 
-		    //tests proximity to the corner
-		    double cornerDist = Math.hypot(xdiff - obSize/2, ydiff - obSize/2);
-		    	//this is the distance from the circle centre to the rectangle corner
-
-		    if (cornerDist < size/2) {collision = true; break;}
+			// tests proximity to the edges
+			if (xdiff <= (obSize / 2 + size / 2) && ydiff <= obSize / 2) {
+				collision = true;
+				break;
 			}
-		
-		if (collision){
+			if (ydiff <= (obSize / 2 + size / 2) && xdiff <= obSize / 2) {
+				collision = true;
+				break;
+			}
+
+			// tests proximity to the corner
+			double cornerDist = Math.hypot(xdiff - obSize / 2, ydiff - obSize / 2);
+			// this is the distance from the circle centre to the rectangle
+			// corner
+
+			if (cornerDist < size / 2) {
+				collision = true;
+				break;
+			}
+		}
+
+		if (collision) {
 			x = x - dx;
 			y = y - dy;
 		}
@@ -178,12 +190,12 @@ public class Player extends GameObject {
 			}
 		}
 	}
-	
-	public void shoot(ArrayList<GameObject> gameObjects){
+
+	public void shoot(ArrayList<GameObject> gameObjects) {
 		Bullet b = null;
-		
-		float xStart = (float)(x + (size/2)*Math.sin(angle));
-		float yStart = (float)(y - (size/2)*Math.cos(angle));
+
+		float xStart = (float) (x + (size / 2) * Math.sin(angle));
+		float yStart = (float) (y - (size / 2) * Math.cos(angle));
 
 		if (parent.mouseButton == PConstants.LEFT) {
 			b = Bullet.addBullet(parent, xStart, yStart, parent.mouseX, parent.mouseY);
@@ -216,26 +228,26 @@ public class Player extends GameObject {
 			gameObjects.add(b2);
 		}
 	}
-	
-	public void drawPlayerHealth() { //IMAGE RELEVANT
-		for (int i = 0; i < this.health; i++){ //IMAGE RELEVANT
-			parent.fill(259, 0, 0); //IMAGE RELEVANT
-			parent.image(Application.heart, 45 + (30*i), 15); //IMAGE RELEVANT
-		} //IMAGE RELEVANT
-	} //IMAGE RELEVANT
-	
+
+	public void drawPlayerHealth() { // IMAGE RELEVANT
+		for (int i = 0; i < this.health; i++) { // IMAGE RELEVANT
+			parent.fill(259, 0, 0); // IMAGE RELEVANT
+			parent.image(Application.heart, 45 + (30 * i), 15); // IMAGE
+																// RELEVANT
+		} // IMAGE RELEVANT
+	} // IMAGE RELEVANT
+
 	public void draw() {
-		
-		
-		angle = -1*PApplet.atan2(parent.mouseX-x, parent.mouseY-y) + (float)Math.PI;
-		
+
+		angle = -1 * PApplet.atan2(parent.mouseX - x, parent.mouseY - y) + (float) Math.PI;
+
 		parent.fill(0, 200);
-		
+
 		parent.pushMatrix();
-		parent.translate(x,y);
+		parent.translate(x, y);
 		parent.rotate(angle);
-//		parent.ellipse(0, 0, size, size);
-		parent.image(Application.shipPic, 0, 0); //IMAGE RELEVANT
+		// parent.ellipse(0, 0, size, size);
+		parent.image(Application.shipPic, 0, 0); // IMAGE RELEVANT
 		parent.popMatrix();
 	}
 
