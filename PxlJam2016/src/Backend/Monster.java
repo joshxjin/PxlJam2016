@@ -12,6 +12,9 @@ public class Monster extends GameObject {
 
 	float size;
 	float speed;
+	
+	int bounceCount;
+	int bounceMax = 20;
 
 	public Monster(PApplet p, float x, float y, float speed, int health) {
 		this.parent = p;
@@ -22,6 +25,7 @@ public class Monster extends GameObject {
 		this.size = 30;
 		this.dx = 0;
 		this.dy = 0;
+		bounceCount = 0;
 
 		monsters.add(this);
 	}
@@ -34,23 +38,34 @@ public class Monster extends GameObject {
 		return this.dy;
 	}
 
-	public void setMove(float playerX, float playerY) {
-		float tempHypot = (float) (Math.hypot((this.x - playerX), (this.y - playerY)));
-		float ratio = this.speed / tempHypot;
-		this.dx = (playerX - this.x) * ratio;
-		this.dy = (playerY - this.y) * ratio;
+	public void setMove(float playerX, float playerY) {		
+		if(bounceCount <1){
+			float tempHypot = (float) (Math.hypot((this.x - playerX), (this.y - playerY)));
+			float ratio = this.speed / tempHypot;
+			this.dx = (playerX - this.x) * ratio;
+			this.dy = (playerY - this.y) * ratio;
+		}
+		
+		if(bounceCount == bounceMax) bounceCount = 0;
+		
+		checkCollision();
 	}
 
 	public void move() {
 		x += dx;
 		y += dy;
+		if (bounceCount >0 ) bounceCount++;
+	}
+
+	public void bounce(double x_move, double y_move){
+		
 	}
 	
 	//method to check collision with Obstacles and recalculate movement if needed
 	public void checkCollision(){
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
 		
-		boolean collision = false;
+		int collision = 0;
 		
 		//this is the movement vector
 		float x_move = 0;
@@ -60,17 +75,22 @@ public class Monster extends GameObject {
 			
 			double xdiff = Math.abs(x - ob.get(i).getX());
 		    double ydiff = Math.abs(y - ob.get(i).getY());
+		    double dist = Math.hypot(xdiff, ydiff);
 		    double obSize = ob.get(i).getSize();
 		    
-		    if (Math.hypot(xdiff, ydiff) > Math.sqrt(2)*obSize/2 + size/2) continue;
+		    if (dist > Math.sqrt(2)*obSize/2 + size/2) continue;
 
 		    //tests proximity to the edges
 		    if (xdiff <= (obSize/2 + size/2) && ydiff <= obSize/2) {
-		    	collision = true;
+		    	collision++;
+		    	x_move += (x - ob.get(i).getX())/dist;
+		    	y_move += (y - ob.get(i).getY())/dist;
 		    	continue;
 		    	} 
 		    if (ydiff <= (obSize/2 + size/2) && xdiff <= obSize/2) {
-		    	collision = true;
+		    	collision++;
+		    	x_move += (x - ob.get(i).getX())/dist;
+		    	y_move += (y - ob.get(i).getY())/dist;
 		    	continue;
 		    	}
 
@@ -79,14 +99,22 @@ public class Monster extends GameObject {
 		    	//this is the distance from the circle centre to the rectangle corner
 
 		    if (cornerDist < size/2) {
-		    	collision = true; 
-		    	break;
+		    	collision++; 
+		    	x_move += (x - ob.get(i).getX())/dist;
+		    	y_move += (y - ob.get(i).getY())/dist;
 		    	}
 			}
 		
-		if (collision == false) return;
+		if (collision == 0) return;
 		
+		bounceCount = 1;
+		dx = x_move/((float)Math.hypot(x_move, y_move))*speed;
+		dy = y_move/((float)Math.hypot(x_move, y_move))*speed;
 		
+		if(collision == 1){
+			dx = (float) (dx*((float)Math.random()+0.5));
+			dy = (float) (dy*((float)Math.random()+0.5));
+		}
 	}
 
 	public static ArrayList<Monster> getMonsters() {

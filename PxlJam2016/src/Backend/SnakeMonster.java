@@ -14,28 +14,36 @@ public class SnakeMonster extends Monster{
 	
 	public void setMove(float playerX, float playerY) {
 		
-		float xturn, yturn;
-		
-		float tempHypot = (float)(Math.hypot((this.x - playerX), (this.y - playerY)));
-		float ratio = this.speed / tempHypot;
-		
-		double swingFreq = 7.5;
-		
-		xturn = (float)(-(playerY-this.y)*Math.sin(time/swingFreq)*5);
-		yturn = (float)((playerX-this.x)*Math.sin(time/swingFreq)*5);
-		
-		if(tempHypot < 40) {
-			xturn = 0;
-			yturn = 0;
+		if(bounceCount == 0){
+			float xturn, yturn;
+
+			float tempHypot = (float)(Math.hypot((this.x - playerX), (this.y - playerY)));
+			float ratio = this.speed / tempHypot;
+
+			double swingFreq = 7.5;
+
+			xturn = (float)(-(playerY-this.y)*Math.sin(time/swingFreq)*5);
+			yturn = (float)((playerX-this.x)*Math.sin(time/swingFreq)*5);
+
+			if(tempHypot < 40) {
+				xturn = 0;
+				yturn = 0;
+			}
+
+			this.dx = (playerX - this.x + xturn) * ratio;
+			this.dy = (playerY - this.y + yturn) * ratio;
 		}
-				
-		this.dx = (playerX - this.x + xturn) * ratio;
-		this.dy = (playerY - this.y + yturn) * ratio;
+		
+		if(bounceCount == bounceMax) bounceCount = 0;
+		
+		checkCollision();
 	}
 	
 	public void move() {
 		x += dx;
 		y += dy;
+
+		if (bounceCount >0 ) bounceCount++;
 		this.time++;
 	}
 

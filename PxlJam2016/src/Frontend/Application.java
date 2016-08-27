@@ -30,21 +30,16 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-//		for (int i = 0; i < 10; i++) {
-//			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
-//			gameObjects.add(m);
-//		}
-		
-		for (int i = 0; i < 4; i++){
-			Obstacle o = new Obstacle(this, i*50 + 20, i* 50 + 20);
-			gameObjects.add(o);
+		for (int i = 0; i < 10; i++) {
+			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
+			gameObjects.add(m);
 		}
 		
-//		Monster m = new Monster(this, 100, 100, 2, 10);
-//		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
-//
-//		gameObjects.add(m);
-//		gameObjects.add(m0);
+		Monster m = new Monster(this, 100, 100, 2, 10);
+		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
+
+		gameObjects.add(m);
+		gameObjects.add(m0);
 		
 		gameObjects.add(player);
 		
@@ -115,7 +110,6 @@ public class Application extends PApplet {
 							break;
 						}
 						
-						//DC: added Bullet collision with Obstacle
 						if (returnList.get(j) instanceof Obstacle){
 							removeList.add(b);
 							Bullet.getBullets().remove(b);
@@ -131,9 +125,7 @@ public class Application extends PApplet {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= m.getSize() + returnList.get(j).getSize() && returnList.get(j) instanceof Player) {
 						System.out.println("Game Over!");
-					} else if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Monster && returnList.get(j) != m) {
-						break;
-					} else {
+					}else {										//DC: removed Monster/Monster collision check
 						m.setMove(player.getX(), player.getY());
 					}
 				}
