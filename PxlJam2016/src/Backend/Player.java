@@ -109,7 +109,7 @@ public class Player extends GameObject {
 	public void drawPlayerHealth() { //IMAGE RELEVANT
 		for (int i = 0; i < this.health; i++){ //IMAGE RELEVANT
 			parent.fill(259, 0, 0); //IMAGE RELEVANT
-			parent.image(Application.heart, 45 + (30*i), 45); //IMAGE RELEVANT
+			parent.image(Application.heart, 45 + (30*i), 15); //IMAGE RELEVANT
 		} //IMAGE RELEVANT
 	} //IMAGE RELEVANT
 	

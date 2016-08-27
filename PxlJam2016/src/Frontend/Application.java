@@ -77,12 +77,13 @@ public class Application extends PApplet {
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
 		
+		imageMode(CENTER);//IMAGE RELEVANT
+		
 		player.drawPlayerHealth();
 		
 		Bullet.moveShowBullets();
 		checkCollision();
 		
-		imageMode(CENTER);//IMAGE RELEVANT
 		player.move();
 		player.draw();
 		
