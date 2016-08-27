@@ -294,6 +294,7 @@ public class Application extends PApplet {
 							gameObjects.removeAll(Bullet.getBullets());
 							frameCount = levelFrame * (level - 1);
 						}
+						playSound(explosion);
 						Bullet.getBullets().clear();
 						Monster.getMonsters().clear();
 						PowerUp.getPowerUps().clear();			//DC: clearing all power-ups
