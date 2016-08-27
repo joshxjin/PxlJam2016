@@ -41,6 +41,7 @@ public class Application extends PApplet {
 	File gunShot;
 	File death1;
 	File death2;
+	File explosion;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -69,6 +70,7 @@ public class Application extends PApplet {
 		gunShot = new File("src/gunShot.wav");
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
+		explosion = new File("src/explosion.wav");
 	}
 	
 	public void playSound(File sound) {
@@ -232,6 +234,7 @@ public class Application extends PApplet {
 						Bullet.getBullets().clear();
 						Monster.getMonsters().clear();
 						lastClick = 0;
+						playSound(explosion);
 						return;
 					} else { // DC: removed Monster/Monster collision check
 						m.setMove(player.getX(), player.getY());
