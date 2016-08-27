@@ -2,6 +2,7 @@ package Backend;
 
 import java.util.ArrayList;
 
+import Frontend.Application;
 import processing.core.PApplet;
 
 public class PowerUp extends GameObject {
@@ -12,7 +13,8 @@ public class PowerUp extends GameObject {
 	/*The types of powerup:
 	 * 1 = extra life
 	 * 2 = speed boost
-	 * 3 = triple fire*/
+	 * 3 = triple fire
+	 * 4 = rapid fire*/
 
 	private static ArrayList<PowerUp> powerups = new ArrayList<PowerUp>();
 	
@@ -36,8 +38,22 @@ public class PowerUp extends GameObject {
 	
 	public static void showPowerUps(){
 		for (PowerUp p : powerups){
-			p.parent.fill(p.type*50);
-			p.parent.ellipse(p.x, p.y, p.size, p.size);
+
+			switch(p.type){
+			case 1:
+				p.parent.image(Application.lifePowerUp, p.x, p.y);
+				break;
+			case 2:
+				p.parent.image(Application.speedPowerUp, p.x, p.y);
+				break;
+			case 3:
+				p.parent.image(Application.tripleFirePowerUp, p.x, p.y);
+				break;
+			case 4:
+				p.parent.image(Application.rapidFirePowerUp, p.x, p.y);
+				break;
+			}
+
 		}
 	}
 

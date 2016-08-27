@@ -3,6 +3,7 @@ package Backend;
 import java.util.ArrayList;
 
 import Frontend.Application;//IMAGE RELEVANT
+import Backend.SnakeMonster;//IMAGE RELEVANT
 import processing.core.PApplet;
 
 public class Monster extends GameObject {
@@ -10,12 +11,16 @@ public class Monster extends GameObject {
 	private PApplet parent;
 
 	private static ArrayList<Monster> monsters = new ArrayList<Monster>();
+	private static ArrayList<Monster> deadMonsters = new ArrayList<Monster>();	//DC: added
 
 	float size;
 	float speed;
 	
 	int bounceCount;
 	int bounceMax = 20;
+	double spawnRate = 0.2;
+	
+	int deathTime = 10;		//DC: frames until ghost disappears
 
 	public Monster(PApplet p, float x, float y, float speed, int health) {
 		this.parent = p;
@@ -117,10 +122,15 @@ public class Monster extends GameObject {
 			dy = (float) (dy*((float)Math.random()+0.5));
 		}
 	}
+	
+	public void kill(){
+		deadMonsters.add(this);
+	}
 
 	public static ArrayList<Monster> getMonsters() {
 		return monsters;
 	}
+
 
 	public static void showMonsters() {
 		for (Monster o : monsters) {
@@ -133,6 +143,42 @@ public class Monster extends GameObject {
 			}//IMAGE RELEVANT
 			
 		}
+		
+		//DC: shows dead monsters and removes them from the list when appropriate
+		ArrayList<Monster> removeList = new ArrayList<Monster>();
+		PowerUp p;
+		for (Monster o: deadMonsters){
+			if (o.deathTime == 0){
+				removeList.add(o);
+				if(Math.random() < o.spawnRate){
+					switch((int)(Math.random()*4 + 1)){
+					case 1:
+						p = new PowerUp(o.parent,o.x,o.y,1);
+						break;
+					case 2:
+						p = new PowerUp(o.parent,o.x,o.y,2);
+						break;
+					case 3:
+						p = new PowerUp(o.parent,o.x,o.y,3);
+						break;
+					case 4:
+						p = new PowerUp(o.parent,o.x,o.y,4);
+						break;
+					}
+				}
+			}
+			else{
+				if (o.getClass() == SnakeMonster.class){
+					o.parent.image(Application.deadSnakeMonsterPic, o.x, o.y);
+					} 
+				else{
+					o.parent.image(Application.deadMonsterPic, o.x, o.y);
+				}
+				o.deathTime--;
+			}
+		}
+		
+		deadMonsters.removeAll(removeList);
 	}
 
 	public static void moveMonsters(float playerX, float playerY) {

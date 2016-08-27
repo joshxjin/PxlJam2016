@@ -28,6 +28,13 @@ public class Application extends PApplet {
 	public static PImage snakeMonsterPic;// IMAGE RELEVANT
 	public static PImage heart;// IMAGE RELEVANT
 	public static PImage rock; // IMAGE RELEVANT
+	public static PImage lifePowerUp;
+	public static PImage speedPowerUp;
+	public static PImage tripleFirePowerUp;
+	public static PImage rapidFirePowerUp;
+	public static PImage deadMonsterPic;
+	public static PImage deadSnakeMonsterPic;
+	
 	Player player;
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
@@ -73,6 +80,14 @@ public class Application extends PApplet {
 		heart = loadImage("heart.png");// IMAGE RELEVANT
 		rock = loadImage("definitelyARock.png"); // IMAGE RELEVANT
 		
+		deadMonsterPic = loadImage("monster1dead.png");
+		deadSnakeMonsterPic = loadImage("monster2dead.png");
+		
+		lifePowerUp = loadImage("lifePowerUp.png");
+		speedPowerUp = loadImage("speedPowerUp.png");
+		tripleFirePowerUp = loadImage("TripleShotPowerUp.png");
+		rapidFirePowerUp = loadImage("rapidFirePowerUp.png");
+		
 		gunShot = new File("src/gunShot.wav");
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
@@ -115,7 +130,7 @@ public class Application extends PApplet {
 			return;
 		}
 		
-		if (frameCount - lastClick >= 15) {
+		if (frameCount - lastClick >= player.getDelay() - 5) {
 			lastClick = frameCount;
 			playSound(gunShot);
 			player.shoot(gameObjects);
@@ -142,7 +157,7 @@ public class Application extends PApplet {
 		}
 		
 		// check if mouse is held down and shoot every 20 frames
-		if (mPressed && frameCount - lastClick > 20) {
+		if (mPressed && frameCount - lastClick > player.getDelay()) {
 			playSound(gunShot);
 			lastClick = frameCount;
 			player.shoot(gameObjects);
@@ -234,11 +249,13 @@ public class Application extends PApplet {
 
 					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
+							Monster m = (Monster) returnList.get(j);		//DC: made a cast to Monster & rewrote
 							removeList.add(b);
-							removeList.add(returnList.get(j));
+							removeList.add(m);
 							Bullet.getBullets().remove(b);
-							Monster.getMonsters().remove(returnList.get(j));
-							if (returnList.get(j) instanceof SnakeMonster) {
+							Monster.getMonsters().remove(m);
+							m.kill();										//so that kill method can be called
+							if (m instanceof SnakeMonster) {
 								playSound(death1);
 							} else {
 								playSound(death2);
@@ -279,8 +296,9 @@ public class Application extends PApplet {
 						}
 						Bullet.getBullets().clear();
 						Monster.getMonsters().clear();
+						PowerUp.getPowerUps().clear();			//DC: clearing all power-ups
+						player.resetPowerUps();					//DC: removing all currently on the player
 						lastClick = 0;
-						playSound(explosion);
 						return;
 					} else { // DC: removed Monster/Monster collision check
 						m.setMove(player.getX(), player.getY());

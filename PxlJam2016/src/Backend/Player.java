@@ -14,9 +14,12 @@ public class Player extends GameObject {
 	int maxHealth = 10;
 	int speedTimer = 0;
 	int tripleFireTimer = 0;
+	int rapidFireTimer = 0;
+	int powerTime = 100;
 	
 	float speedScale;
 	double tripleAngle = Math.PI/6;
+	int rapidDelay = 20;
 
 	public Player(PApplet p, float xx, float yy, float speedx, float speedy) {
 		parent = p;
@@ -58,10 +61,12 @@ public class Player extends GameObject {
 	public void move() {
 
 		
-		//counting down the speed boost
+		//counting down the various timers
 		if(speedTimer == 1) speedScale = 0;
+		if(rapidFireTimer == 1) rapidDelay = 20;
 		if(speedTimer > 0) speedTimer--;
 		if(tripleFireTimer > 0) tripleFireTimer--;
+		if(rapidFireTimer > 0) rapidFireTimer--;
 
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
 
@@ -133,19 +138,19 @@ public class Player extends GameObject {
 			double dist = Math.hypot(p.getX() - x, p.getY() - y);
 			
 			if(dist < size/2 + p.getSize()/2){
-				switch(p.getType()){
-				case 1:{
+				switch(p.getType()) {
+				case 1:
 					addLife();
 					break;
-				}
-				case 2:{
+				case 2:
 					speedUp();
 					break;
-				}
-				case 3:{
+				case 3:
 					tripleFire();
 					break;
-				}
+				case 4:
+					rapidFire();
+					break;
 				}
 				removeList.add(p);
 			}
@@ -155,16 +160,31 @@ public class Player extends GameObject {
 	}
 	
 	private void addLife(){
-		if (health < maxHealth) health++;
+		if (health < maxHealth) {
+			health++;
+		}
 	}
 	
 	private void speedUp(){
-		speedTimer += 360;
+		speedTimer += powerTime;
 		speedScale = 2;
 	}
 	
 	private void tripleFire(){
-		tripleFireTimer += 360;
+		tripleFireTimer += powerTime;
+	}
+	
+	private void rapidFire(){
+		rapidFireTimer += powerTime;
+		rapidDelay = 0;
+	}
+	
+	public void resetPowerUps(){
+		speedTimer = 0;
+		speedScale = 0;
+		tripleFireTimer = 0;
+		rapidFireTimer = 0;
+		rapidDelay = 20;
 	}
 
 	public void stopDir() {
@@ -249,6 +269,10 @@ public class Player extends GameObject {
 		// parent.ellipse(0, 0, size, size);
 		parent.image(Application.shipPic, 0, 0); // IMAGE RELEVANT
 		parent.popMatrix();
+	}
+	
+	public int getDelay(){
+		return rapidDelay;
 	}
 
 }
