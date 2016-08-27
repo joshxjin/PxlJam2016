@@ -1,10 +1,1 @@
-- Fix monster collision.
-- Destroy bullets outside of border
-- Monster collision with border
-- Bullet collision with obstacles
-- UI display (player lives, time, current level)
-- ART
-- Add theme to game
-- Player reset 
-- Add difficulty
-- Path finding
+
