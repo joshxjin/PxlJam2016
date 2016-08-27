@@ -32,18 +32,33 @@ public class Bullet extends GameObject {
 		return b;
 	}
 	
-	public static void moveShowBullets() {
+	public static void moveShowBullets(ArrayList<GameObject> gameObjects) {
+		ArrayList<Bullet> deadBullets = new ArrayList<Bullet>();
 		if (bullets.size() > 0) {
 			for (Bullet b : bullets) {
-				b.move();
-				b.show();
+				Bullet deadBullet = b.move();
+				if (deadBullet == null)
+					b.show();
+				else 
+					deadBullets.add(deadBullet);
 			}
+		}
+		
+		if (deadBullets.size() > 0) {
+			bullets.removeAll(deadBullets);
+			gameObjects.removeAll(deadBullets);
 		}
 	}
 	
-	public void move() {
+	public Bullet move() {
 		this.x += this.dx;
 		this.y += this.dy;
+		
+		if (x < 0 || x > parent.width || y < 0 || y > parent.height) {
+			return this;
+		}
+		
+		return null;
 	}
 	
 	public void show() {
