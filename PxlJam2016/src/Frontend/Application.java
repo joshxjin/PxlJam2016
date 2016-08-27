@@ -16,6 +16,7 @@ import Backend.Player;
 import Backend.PowerUp;
 import Backend.QuadTree;
 import Backend.SnakeMonster;
+import Backend.TeleportMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
