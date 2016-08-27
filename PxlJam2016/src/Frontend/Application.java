@@ -1,7 +1,11 @@
 package Frontend;
 
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 import Backend.Bullet;
 import Backend.GameObject;
@@ -9,9 +13,9 @@ import Backend.Levels;
 import Backend.Monster;
 import Backend.Obstacle;
 import Backend.Player;
+import Backend.PowerUp;
 import Backend.QuadTree;
 import Backend.SpawnPoint;
-import Backend.PowerUp;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
 
@@ -32,6 +36,8 @@ public class Application extends PApplet {
 	int lastClick = 0;
 	boolean gameOver = false;
 	boolean mPressed = false;
+	
+	File gunShot;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -56,7 +62,18 @@ public class Application extends PApplet {
 		shipPic = loadImage("AVerySillyShip2.png");// IMAGE RELEVANT
 		heart = loadImage("heart.png");// IMAGE RELEVANT
 		rock = loadImage("definitelyARock.png"); // IMAGE RELEVANT
-
+		
+		gunShot = new File("src/gunShot.wav");
+	}
+	
+	public void playSound(File sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(sound));
+			clip.start();
+		} catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	public void mousePressed() {
@@ -76,6 +93,7 @@ public class Application extends PApplet {
 		
 		if (frameCount - lastClick >= 15) {
 			lastClick = frameCount;
+			playSound(gunShot);
 			player.shoot(gameObjects);
 		}
 		mPressed = true;
@@ -101,6 +119,7 @@ public class Application extends PApplet {
 		
 		// check if mouse is held down and shoot every 20 frames
 		if (mPressed && frameCount - lastClick > 20) {
+			playSound(gunShot);
 			lastClick = frameCount;
 			player.shoot(gameObjects);
 		}
