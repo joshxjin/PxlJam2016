@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Frontend.Application;
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 public class Obstacle extends GameObject {
 
@@ -34,9 +35,11 @@ public class Obstacle extends GameObject {
 
 	public static void showObstacles() {
 		for (Obstacle o : obstacles) {
+
 			//o.parent.fill(0, 0, 255); //IMAGE RELEVANT
 			//o.parent.rect(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
 			o.parent.image(Application.rock, o.x, o.y);//IMAGE RELEVANT
+
 		}
 	}
 

@@ -36,14 +36,21 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		for (int i = 0; i < 10; i++) {
-			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
-			gameObjects.add(m);
+//		for (int i = 0; i < 10; i++) {
+//			Monster m = new Monster(this, random(this.width), random(this.height), 1, 10);
+//			gameObjects.add(m);
+//		}
+		
+		for (int i = 0; i < 4; i++){
+			Obstacle o = new Obstacle(this, i*50 + 20, i* 50 + 20);
+			gameObjects.add(o);
 		}
-		Monster m = new Monster(this, 100, 100, 2, 10);
-		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
-		gameObjects.add(m);
-		gameObjects.add(m0);
+		
+//		Monster m = new Monster(this, 100, 100, 2, 10);
+//		Monster m0 = new SnakeMonster(this, random(this.width), random(this.height), 1, 10);
+//
+//		gameObjects.add(m);
+//		gameObjects.add(m0);
 		
 		gameObjects.add(player);
 		
@@ -103,14 +110,18 @@ public class Application extends PApplet {
 
 		ArrayList<GameObject> returnList = new ArrayList<GameObject>();
 		ArrayList<GameObject> removeList = new ArrayList<GameObject>();
+		
 		for (int i = 0; i < gameObjects.size(); i++) {
+			
 			returnList.clear();
 			qt.retrieve(returnList, gameObjects.get(i));
 
 			if (gameObjects.get(i) instanceof Bullet) {
+				
 				Bullet b = (Bullet) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(b.getX() - returnList.get(j).getX(), b.getY() - returnList.get(j).getY()));
+					
 					if (d <= (b.getSize() + returnList.get(j).getSize())/2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
 							removeList.add(b);
@@ -119,9 +130,18 @@ public class Application extends PApplet {
 							Monster.getMonsters().remove(returnList.get(j));
 							break;
 						}
+						
+						//DC: added Bullet collision with Obstacle
+						if (returnList.get(j) instanceof Obstacle){
+							removeList.add(b);
+							Bullet.getBullets().remove(b);
+							break;
+						}
 					}
 				}
-			} else if (gameObjects.get(i) instanceof Monster) {
+			}
+			
+			else if (gameObjects.get(i) instanceof Monster) {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
