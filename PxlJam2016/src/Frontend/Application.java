@@ -92,6 +92,8 @@ public class Application extends PApplet {
 		textAlign(LEFT);
 		textSize(10);
 		text("Frame: " + frameCount, 800, 60);
+		textSize(10);
+		text("Level: " + level, 800, 70);
 		
 		imageMode(CENTER);//IMAGE RELEVANT
 		
