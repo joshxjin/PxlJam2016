@@ -175,7 +175,7 @@ public class Application extends PApplet {
 		}
 		dImage.updatePixels();
 		
-		if (level % 1 == 0) {
+		if (level % 3 == 0) {
 			
 			image(dImage, 450, 450);
 		}
