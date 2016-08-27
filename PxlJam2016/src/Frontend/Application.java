@@ -58,6 +58,7 @@ public class Application extends PApplet {
 	}
 
 	public void mousePressed() {
+		// click to restart game.
 		if (gameOver) {
 			gameOver = false;
 			player = new Player(this, 450, 450, 5, 5);
@@ -69,10 +70,10 @@ public class Application extends PApplet {
 			spawnFrame = 100;
 			return;
 		}
+		
 		lastClick = frameCount;
 		player.shoot(gameObjects);
 		mPressed = true;
-		
 	}
 	
 	public void mouseReleased() {
@@ -88,28 +89,33 @@ public class Application extends PApplet {
 	}
 
 	public void draw() {
+		// do nothing if game over is showing.
 		if (gameOver) {
 			return;
 		}
 		
+		// check if mouse is held down and shoot every 20 frames
 		if (mPressed && frameCount - lastClick > 20) {
 			lastClick = frameCount;
 			player.shoot(gameObjects);
 		}
+		
+		// draw background and border
 		background(255);
-		fill(0, 0, 0);
+		
+		fill(0);
 		rect(0, 0, 900, 30);
 		rect(0, 0, 30, 900);
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
-
-		levelSpawn();
-
+		
 		textAlign(LEFT);
-		textSize(10);
-		text("Frame: " + frameCount, 800, 60);
-		textSize(10);
-		text("Level: " + level, 800, 70);
+		textSize(12);
+		text("Frame: " + frameCount, 780, 50);
+		text("Level: " + level, 780, 63);
+
+		// spawn Monster
+		levelSpawn();
 
 		imageMode(CENTER);// IMAGE RELEVANT
 
@@ -121,7 +127,6 @@ public class Application extends PApplet {
 		player.move();
 		player.draw();
 
-		// Monster.moveMonsters(player.getX(), player.getY());
 		Monster.showMonsters();
 
 		Obstacle.showObstacles();
@@ -169,12 +174,15 @@ public class Application extends PApplet {
 				for (int j = 0; j < returnList.size(); j++) {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
+						// Player lose health and die/game over
 						player.setHealth(player.getHealth() - 1);
 						if (player.getHealth() == 0) {
 							gameOver = true;
 							textSize(30);
 							textAlign(CENTER);
 							text("Game Over!", 450, 450);
+							textSize(18);
+							text("Click mouse to restart.", 450, 470);
 							Bullet.getBullets().clear();
 							Monster.getMonsters().clear();
 							Obstacle.getObstacles().clear();
@@ -204,15 +212,15 @@ public class Application extends PApplet {
 	}
 
 	public void levelSpawn() {
+		// increase level
 		if (frameCount % levelFrame == 0) {
-			// gameObjects.removeAll(Obstacle.getObstacles());
 			SpawnPoint.getSpawnPoints().clear();
-			// Obstacle.getObstacles().clear();
 			level++;
 			Levels.loadLevel(this, player, gameObjects, level);
 			spawnFrame = spawnFrame - 5;
 		}
 
+		// spawn monster
 		if (frameCount % spawnFrame == 0) {
 			SpawnPoint.spawn(this, gameObjects);
 		}
