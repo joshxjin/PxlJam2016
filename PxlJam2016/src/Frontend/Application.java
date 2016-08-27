@@ -47,6 +47,10 @@ public class Application extends PApplet {
 	boolean gameOver = false;
 	boolean mPressed = false;
 	
+	int score = 0;		//DC: added score counter
+	int snakeMonsterScore = 10;
+	int monsterScore = 5;
+	
 	File gunShot;
 	File death1;
 	File death2;
@@ -204,8 +208,12 @@ public class Application extends PApplet {
 		
 		textAlign(LEFT);
 		textSize(12);
-		text("Frame: " + frameCount, 780, 50);
+//		text("Frame: " + frameCount, 780, 50);
+		text("Time: " + frameCount/60 + " s", 780, 50);			//DC: changed frame count to time passed
+		
 		text("Level: " + level, 780, 63);
+		
+		text("Score: " + score, 780, 76);					//DC: added score display
 
 		// spawn Monster
 		levelSpawn();
@@ -224,7 +232,7 @@ public class Application extends PApplet {
 
 		Obstacle.showObstacles();
 		
-		PowerUp.showPowerUps();		//DC: added power-up drawing method
+		PowerUp.showPowerUps();
 	}
 
 	public void checkCollision() {
@@ -250,15 +258,17 @@ public class Application extends PApplet {
 
 					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
-							Monster m = (Monster) returnList.get(j);		//DC: made a cast to Monster & rewrote
+							Monster m = (Monster) returnList.get(j);
 							removeList.add(b);
 							removeList.add(m);
 							Bullet.getBullets().remove(b);
 							Monster.getMonsters().remove(m);
-							m.kill();										//so that kill method can be called
+							m.kill();
 							if (m instanceof SnakeMonster) {
+								score += snakeMonsterScore;			//DC: increment score if monster killed
 								playSound(death1);
 							} else {
+								score += monsterScore;				//and here
 								playSound(death2);
 							}
 							break;
@@ -284,10 +294,12 @@ public class Application extends PApplet {
 							textAlign(CENTER);
 							text("Game Over!", 450, 450);
 							textSize(18);
-							text("Click mouse to restart.", 450, 470);
+							text("You scored " + score + " points!", 450, 470);			//DC: display final score on Game Over
+							text("Click mouse to restart.", 450, 490);
 							Obstacle.getObstacles().clear();
 							SpawnPoint.getSpawnPoints().clear();
 							gameObjects.clear();
+							score = 0;						//DC: reset score on Game Over
 						} else {
 							player.setX(450);
 							player.setY(450);
@@ -297,11 +309,11 @@ public class Application extends PApplet {
 						}
 						Bullet.getBullets().clear();
 						Monster.getMonsters().clear();
-						PowerUp.getPowerUps().clear();			//DC: clearing all power-ups
-						player.resetPowerUps();					//DC: removing all currently on the player
+						PowerUp.getPowerUps().clear();
+						player.resetPowerUps();
 						lastClick = 0;
 						return;
-					} else { // DC: removed Monster/Monster collision check
+					} else {
 						m.setMove(player.getX(), player.getY());
 					}
 				}
