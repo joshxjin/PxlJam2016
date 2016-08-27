@@ -7,6 +7,7 @@ import Backend.Bullet;
 import Backend.GameObject;
 import Backend.Levels;
 import Backend.Monster;
+import Backend.SnakeMonster;
 import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
