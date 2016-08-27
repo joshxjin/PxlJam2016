@@ -53,6 +53,7 @@ public class Application extends PApplet {
 	int monsterScore = 5;
 
 	boolean hydraGlitch = false;
+	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
 	
 	File gunShot;
 	File death1;
@@ -212,15 +213,20 @@ public class Application extends PApplet {
 		}
 		dImage.updatePixels();
 		
-		if (level % 9 == 0) {
-			
-		} else if (level % 6 == 0) {
-			hydraGlitch = true;
-		} else if (level % 3 == 0) {
-			image(dImage, 450, 450);
-		} else if (level == 2) {
-			hydraGlitch = true;
+//		if (level % 9 == 0) {
+//			
+//		} else if (level % 6 == 0) {
+//			hydraGlitch = true;
+//		} else if (level % 3 == 0) {
+//			image(dImage, 450, 450);
+//		} else if (level == 2) {
+//			hydraGlitch = true;
+//		}
+		
+		if (level % 2 == 1){
+			manyPowerUpsGlitch = true;
 		}
+		else manyPowerUpsGlitch = false;
 		
 		fill(0);
 		rect(0, 0, 900, 30);

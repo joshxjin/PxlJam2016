@@ -9,8 +9,8 @@ public class TeleportMonster extends Monster {
 	private int time;
 	private float pX, pY;
 	
-	public TeleportMonster(PApplet p, float x, float y, float speed, int health) {
-		super(p, x, y, speed, health);
+	public TeleportMonster(PApplet p, float x, float y, float speed) {
+		super(p, x, y, speed);
 		// TODO Auto-generated constructor stub
 		time = (int)(Math.random()*100 + 20);
 	}
