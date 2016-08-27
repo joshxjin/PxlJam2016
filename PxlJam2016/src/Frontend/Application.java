@@ -15,6 +15,7 @@ import Backend.Obstacle;
 import Backend.Player;
 import Backend.PowerUp;
 import Backend.QuadTree;
+import Backend.SnakeMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
@@ -38,6 +39,8 @@ public class Application extends PApplet {
 	boolean mPressed = false;
 	
 	File gunShot;
+	File death1;
+	File death2;
 
 	public static void main(String[] args) {
 		PApplet.main("Frontend.Application");
@@ -64,6 +67,8 @@ public class Application extends PApplet {
 		rock = loadImage("definitelyARock.png"); // IMAGE RELEVANT
 		
 		gunShot = new File("src/gunShot.wav");
+		death1 = new File("src/death1.wav");
+		death2 = new File("src/death2.wav");
 	}
 	
 	public void playSound(File sound) {
@@ -185,6 +190,11 @@ public class Application extends PApplet {
 							removeList.add(returnList.get(j));
 							Bullet.getBullets().remove(b);
 							Monster.getMonsters().remove(returnList.get(j));
+							if (returnList.get(j) instanceof SnakeMonster) {
+								playSound(death1);
+							} else {
+								playSound(death2);
+							}
 							break;
 						}
 
