@@ -11,6 +11,7 @@ import Backend.Obstacle;
 import Backend.Player;
 import Backend.QuadTree;
 import Backend.SpawnPoint;
+import Backend.PowerUp;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
 
@@ -48,6 +49,7 @@ public class Application extends PApplet {
 		gameObjects.add(player);
 
 		Levels.loadLevel(this, player, gameObjects, level);
+
 
 		monsterPic = loadImage("monster1.png");// IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");// IMAGE RELEVANT
@@ -130,6 +132,8 @@ public class Application extends PApplet {
 		Monster.showMonsters();
 
 		Obstacle.showObstacles();
+		
+		PowerUp.showPowerUps();		//DC: added power-up drawing method
 	}
 
 	public void checkCollision() {

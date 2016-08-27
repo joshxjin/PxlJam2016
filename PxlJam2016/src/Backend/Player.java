@@ -11,6 +11,12 @@ public class Player extends GameObject {
 	PApplet parent;
 	float DX, DY;
 	float angle;
+	int maxHealth = 10;
+	int speedTimer = 0;
+	int tripleFireTimer = 0;
+	
+	float speedScale;
+	double tripleAngle = Math.PI/6;
 
 	public Player(PApplet p, float xx, float yy, float speedx, float speedy) {
 		parent = p;
@@ -21,33 +27,41 @@ public class Player extends GameObject {
 		size = 30;
 		angle = 0;
 		health = 3;
+		speedScale = 0;
 	}
 
 	public void setDir() {
+		
 		if (parent.key == PConstants.CODED) {
 			if (parent.keyCode == PConstants.UP) {
-				dy = -DY;
+					dy = -(DY + speedScale);
 			} else if (parent.keyCode == PConstants.DOWN) {
-				dy = DY;
+					dy = DY + speedScale;
 			} else if (parent.keyCode == PConstants.LEFT) {
-				dx = -DX;
+				dx = -(DX + speedScale);
 			} else if (parent.keyCode == PConstants.RIGHT) {
-				dx = DX;
+				dx = DX + speedScale;
 			}
 		} else {
 			if (parent.key == 'w' || parent.key == 'W') {
-				dy = -DY;
+				dy = -(DY + speedScale);
 			} else if (parent.key == 's' || parent.key == 'S') {
-				dy = DY;
+				dy = DY + speedScale;
 			} else if (parent.key == 'a' || parent.key == 'A') {
-				dx = -DX;
+				dx = -(DX + speedScale);
 			} else if (parent.key == 'd' || parent.key == 'D') {
-				dx = DX;
+				dx = DX + speedScale;
 			}
 		}
 	}
 
 	public void move() {
+
+		
+		//counting down the speed boost
+		if(speedTimer == 1) speedScale = 0;
+		if(speedTimer > 0) speedTimer--;
+		if(tripleFireTimer > 0) tripleFireTimer--;
 
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
 
@@ -107,6 +121,50 @@ public class Player extends GameObject {
 			x = x - dx;
 			y = y - dy;
 		}
+		
+		checkPowerUps();
+	}
+	
+	private void checkPowerUps(){
+		ArrayList<PowerUp> powerups = PowerUp.getPowerUps();
+		ArrayList<PowerUp> removeList = new ArrayList<PowerUp>();
+		
+		for (PowerUp p : powerups){
+			double dist = Math.hypot(p.getX() - x, p.getY() - y);
+			
+			if(dist < size/2 + p.getSize()/2){
+				switch(p.getType()){
+				case 1:{
+					addLife();
+					break;
+				}
+				case 2:{
+					speedUp();
+					break;
+				}
+				case 3:{
+					tripleFire();
+					break;
+				}
+				}
+				removeList.add(p);
+			}
+		}
+		
+		powerups.removeAll(removeList);
+	}
+	
+	private void addLife(){
+		if (health < maxHealth) health++;
+	}
+	
+	private void speedUp(){
+		speedTimer += 360;
+		speedScale = 2;
+	}
+	
+	private void tripleFire(){
+		tripleFireTimer += 360;
 	}
 
 	public void stopDir() {
@@ -145,6 +203,30 @@ public class Player extends GameObject {
 			b = Bullet.addBullet(parent, xStart, yStart, parent.mouseX, parent.mouseY);
 		}
 		gameObjects.add(b);
+		
+		if(tripleFireTimer > 0){
+			Bullet b1 = null, b2 = null;
+			double xdiff = parent.mouseX - xStart;
+			double ydiff = parent.mouseY - yStart;
+			
+			double xleft = xStart + xdiff*Math.cos(tripleAngle) - ydiff*Math.sin(tripleAngle);
+			double yleft = yStart + xdiff*Math.sin(tripleAngle) + ydiff*Math.cos(tripleAngle);
+			
+			double xright = xStart + xdiff*Math.cos(-tripleAngle) - ydiff*Math.sin(-tripleAngle);
+			double yright = yStart + xdiff*Math.sin(-tripleAngle) + ydiff*Math.cos(-tripleAngle);
+			
+			if (parent.mouseButton == PConstants.LEFT) {
+				
+				b1 = Bullet.addBullet(parent, xStart, yStart, (float)xleft, (float)yleft);
+				b2 = Bullet.addBullet(parent, xStart, yStart, (float)xright, (float)yright);
+			} else if (parent.mouseButton == PConstants.RIGHT) {
+				b1 = Bullet.addBullet(parent, xStart, yStart, (float)xleft, (float)yleft);
+				b2 = Bullet.addBullet(parent, xStart, yStart, (float)xright, (float)yright);
+			}
+			
+			gameObjects.add(b1);
+			gameObjects.add(b2);
+		}
 	}
 
 	public void drawPlayerHealth() { // IMAGE RELEVANT
