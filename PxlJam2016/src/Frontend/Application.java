@@ -51,6 +51,7 @@ public class Application extends PApplet {
 	File death1;
 	File death2;
 	File explosion;
+	File backgroundMusic;
 	
 	double threshhold = 15;
 	Capture video;
@@ -93,8 +94,10 @@ public class Application extends PApplet {
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
 		explosion = new File("src/explosion.wav");
-		video = new Capture(this, 800, 600);
+		backgroundMusic = new File("src/backgroundMusic.wav");
+		playBackground(backgroundMusic);
 		
+		video = new Capture(this, 800, 600);
 		video.start();
 		temp = createImage(800, 600, RGB);
 		dImage = createImage(800, 600, RGB);
@@ -104,6 +107,17 @@ public class Application extends PApplet {
 		temp.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
 		temp.updatePixels();
 		video.read();
+	}
+	
+	public void playBackground(File sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(sound));
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			Thread.sleep(10);
+		} catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 	
 	public void playSound(File sound) {
@@ -291,7 +305,7 @@ public class Application extends PApplet {
 					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
-						player.setHealth(player.getHealth() - 1);
+						//player.setHealth(player.getHealth() - 1);
 						if (player.getHealth() == 0) {
 							gameOver = true;
 							textSize(30);
