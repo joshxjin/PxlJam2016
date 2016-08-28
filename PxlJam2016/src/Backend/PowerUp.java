@@ -155,7 +155,7 @@ public class PowerUp extends GameObject {
 				p.parent.image(Application.rapidFirePowerUp, p.x, p.y);
 				break;
 			}
-
+			
 		}
 	}
 
