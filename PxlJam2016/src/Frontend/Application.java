@@ -56,13 +56,10 @@ public class Application extends PApplet {
 	boolean videoEnabled = false;
 	boolean videoGlitch = false;
 	boolean hydraGlitch = false;
-	public static boolean switchGlitch = false; // Every monster looks like a
-												// ship, the ship looks like a
-												// monster
-	public static boolean manyPowerUpsGlitch = false; // Every monster drops a
-														// power-up
-	public static boolean runawayGlitch = false; // power ups run away from
-													// player
+	public static boolean powerUpThiefGlitch = false;
+	public static boolean switchGlitch = false; // Every monster looks like a ship, the ship looks like a monster
+	public static boolean manyPowerUpsGlitch = false; // Every monster drops a power-up
+	public static boolean runawayGlitch = false; // power ups run away from player
 	public static boolean teleportGlitch = false; // some monsters teleport
 
 	File gunShot;
@@ -217,6 +214,7 @@ public class Application extends PApplet {
 		background(255);
 
 		if (videoEnabled) {
+			// run image comparison algorithm if there is a compatible webcam
 			temp.loadPixels();
 			dImage.loadPixels();
 			video.loadPixels();
@@ -252,6 +250,7 @@ public class Application extends PApplet {
 		rect(0, 900 - 30, 900, 30);
 		
 		if (gameStart) {
+			// draw starting screen
 			imageMode(CENTER);
 			image(bigMonster, 450, 300);
 			textSize(36);
@@ -271,7 +270,6 @@ public class Application extends PApplet {
 
 		textAlign(LEFT);
 		textSize(12);
-
 		text("Level: " + level, 780, 50);
 		text("Score: " + score, 780, 63); // DC: added score display
 
@@ -296,7 +294,6 @@ public class Application extends PApplet {
 			PowerUp.movePowerUps(player.getX(), player.getY());
 		}
 		PowerUp.showPowerUps();
-
 	}
 
 	public void checkCollision() {
@@ -404,6 +401,15 @@ public class Application extends PApplet {
 
 		gameObjects.removeAll(removeList);
 
+		if(powerUpThiefGlitch){
+			ArrayList<Monster> extraMonsters = Monster.getExtraMonsters();
+			gameObjects.addAll(extraMonsters);
+			extraMonsters.clear();
+		}
+		
+		ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
+		gameObjects.addAll(extraBullets);
+		extraBullets.clear();
 	}
 
 	public void levelSpawn() {
@@ -435,9 +441,9 @@ public class Application extends PApplet {
 		Random r = new Random();
 		int chance;
 		if (videoEnabled) {
-			chance = 12;
+			chance = 14;
 		} else {
-			chance = 10;
+			chance = 12;
 		}
 		switch (r.nextInt(chance)) {
 		case 0:
@@ -463,6 +469,10 @@ public class Application extends PApplet {
 		case 5:
 			teleportGlitch = true;
 			//System.out.println("teleportGlitch");
+			break;
+		case 6:
+			powerUpThiefGlitch = true;
+			//System.out.println("powerUpTheifGlitch");
 			break;
 		default:
 			//System.out.println("normal mode");
