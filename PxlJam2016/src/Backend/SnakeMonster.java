@@ -1,5 +1,7 @@
 package Backend;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 
 public class SnakeMonster extends Monster{
@@ -46,8 +48,19 @@ public class SnakeMonster extends Monster{
 		if (bounceCount >0 ) bounceCount++;
 		this.time++;
 		
+		//DC: checking/resetting possible power-ups
 		if (speedTimer == 1) speed = speedDefault;
-		if (speedTimer > 0 ) speedTimer--;			//DC: added speed variation
+		if (speedTimer > 0 ) speedTimer--;		
+		if(tripleFireTimer > 0) tripleFireTimer--;
+		if(rapidFireTimer > 0) rapidFireTimer--;
+		
+		//shooting every so many frames (determined by shootRate)
+		if(rapidFireTimer > 0 || tripleFireTimer > 0){
+			if (shootTimer == 0){
+				shoot();
+			}
+			else shootTimer--;
+		}
 	}
 
 }

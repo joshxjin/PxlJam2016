@@ -371,6 +371,11 @@ public class Application extends PApplet {
 			gameObjects.addAll(extraMonsters);
 			extraMonsters.clear();
 		}
+		
+		ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
+		gameObjects.addAll(extraBullets);
+		extraBullets.clear();
+		
 
 	}
 
@@ -390,6 +395,5 @@ public class Application extends PApplet {
 			SpawnPoint.spawn(this, gameObjects);
 		}
 	}
-
 
 }
