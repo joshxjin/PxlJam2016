@@ -53,6 +53,7 @@ public class Application extends PApplet {
 	int monsterScore = 5;
 
 	boolean hydraGlitch = false;
+	public static boolean playerMonsterSwitchGlitch = false; //Every monster looks like a ship, the ship looks like a monster
 	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
 	
 	File gunShot;
@@ -227,6 +228,12 @@ public class Application extends PApplet {
 			manyPowerUpsGlitch = true;
 		}
 		else manyPowerUpsGlitch = false;
+		
+		if (level == 1){
+			playerMonsterSwitchGlitch = true;
+		} else {
+			playerMonsterSwitchGlitch = false;
+		}
 		
 		fill(0);
 		rect(0, 0, 900, 30);
