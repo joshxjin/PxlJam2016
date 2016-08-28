@@ -263,7 +263,7 @@ public class Monster extends GameObject {
 	}
 
 
-	public static void showMonsters() {		
+	public static void showMonsters() {	
 		for (Monster o : monsters) {
 			o.parent.fill(255);
 			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
@@ -272,7 +272,6 @@ public class Monster extends GameObject {
 			} else{//IMAGE RELEVANT
 				o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
 			}//IMAGE RELEVANT
-			
 		}
 		
 		//DC: shows dead monsters and removes them from the list when appropriate

@@ -32,6 +32,20 @@ public class TeleportMonster extends Monster {
 		y += dy;
 		if (bounceCount >0 ) bounceCount++;
 		time--;
+		
+		//DC: checking/resetting possible power-ups
+		if (speedTimer == 1) speed = speedDefault;
+		if (speedTimer > 0 ) speedTimer--;		
+		if(tripleFireTimer > 0) tripleFireTimer--;
+		if(rapidFireTimer > 0) rapidFireTimer--;
+		
+		//shooting every so many frames (determined by shootRate)
+		if(rapidFireTimer > 0 || tripleFireTimer > 0){
+			if (shootTimer == 0){
+				shoot();
+			}
+			else shootTimer--;
+		}
 	}
 	
 	private void teleport(){

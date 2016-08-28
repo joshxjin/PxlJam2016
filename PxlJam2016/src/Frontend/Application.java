@@ -86,9 +86,6 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		player = new Player(this, 450, 450);
-		gameObjects.add(player);
-
 		monsterPic = loadImage("monster1.png");// IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");// IMAGE RELEVANT
 		shipPic = loadImage("AVerySillyShip2.png");// IMAGE RELEVANT
@@ -274,6 +271,9 @@ public class Application extends PApplet {
 		text("Level: " + level, 780, 50);
 		text("Score: " + score, 780, 63); // DC: added score display
 
+		
+		powerUpThiefGlitch = true;
+		manyPowerUpsGlitch = true;
 		// spawn Monster
 		levelSpawn();
 
@@ -408,16 +408,11 @@ public class Application extends PApplet {
 			gameObjects.addAll(extraMonsters);
 			extraMonsters.clear();
 		}
-
-		if(powerUpThiefGlitch){
-			ArrayList<Monster> extraMonsters = Monster.getExtraMonsters();
-			gameObjects.addAll(extraMonsters);
-			extraMonsters.clear();
-		}
 		
 		ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
 		gameObjects.addAll(extraBullets);
 		extraBullets.clear();
+		
 	}
 
 	public void levelSpawn() {
