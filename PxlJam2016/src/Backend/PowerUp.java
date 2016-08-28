@@ -74,7 +74,8 @@ public class PowerUp extends GameObject {
 				o.x = 45;
 			} else if (o.x >= 855){
 				o.x = 855;
-			} else if (o.y <= 45){
+			}
+			if (o.y <= 45){
 				o.y = 45;
 			} else if (o.y >= 855){
 				o.y = 855;
