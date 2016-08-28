@@ -16,7 +16,6 @@ import Backend.Player;
 import Backend.PowerUp;
 import Backend.QuadTree;
 import Backend.SnakeMonster;
-import Backend.TeleportMonster;
 import Backend.SpawnPoint;
 import processing.core.PApplet;
 import processing.core.PImage;//IMAGE RELEVANT
@@ -54,6 +53,7 @@ public class Application extends PApplet {
 
 	boolean hydraGlitch = false;
 	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
+	public static boolean teleportGlitch = false;			//some monsters teleport
 	
 	File gunShot;
 	File death1;
@@ -222,11 +222,7 @@ public class Application extends PApplet {
 //		} else if (level == 2) {
 //			hydraGlitch = true;
 //		}
-		
-		if (level % 2 == 1){
-			manyPowerUpsGlitch = true;
-		}
-		else manyPowerUpsGlitch = false;
+
 		
 		fill(0);
 		rect(0, 0, 900, 30);
