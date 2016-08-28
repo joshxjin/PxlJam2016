@@ -166,6 +166,14 @@ public class Application extends PApplet {
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
+			// reset all glitches
+			videoGlitch = false;
+			hydraGlitch = false;
+			switchGlitch = false;
+			manyPowerUpsGlitch = false;
+			runawayGlitch = false;
+			teleportGlitch = false;
+			powerUpThiefGlitch = false;
 			//generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
@@ -423,6 +431,7 @@ public class Application extends PApplet {
 			manyPowerUpsGlitch = false;
 			runawayGlitch = false;
 			teleportGlitch = false;
+			powerUpThiefGlitch = false;
 
 			generateGlitch();
 		}
