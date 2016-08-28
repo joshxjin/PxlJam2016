@@ -132,7 +132,7 @@ public class Monster extends GameObject {
 		for (Monster o : monsters) {
 			o.parent.fill(255);
 			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
-			if (Application.playerMonsterSwitchGlitch == true){
+			if (Application.switchGlitch == true){
 				if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
 					o.parent.image(Application.shipPic, o.x, o.y);//IMAGE RELEVANT
 				} else{//IMAGE RELEVANT
