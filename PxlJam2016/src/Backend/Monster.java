@@ -11,13 +11,25 @@ public class Monster extends GameObject {
 	private PApplet parent;
 
 	private static ArrayList<Monster> monsters = new ArrayList<Monster>();
-	private static ArrayList<Monster> deadMonsters = new ArrayList<Monster>();	//DC: added
+	private static ArrayList<Monster> deadMonsters = new ArrayList<Monster>();
+	
+	private static ArrayList<Monster> extraMonsters = new ArrayList<Monster>();
+	//DC: a list of extra monsters to add in the case of power-up thief glitch being on
+	//and a monster running over an extra life power-up
 
 	int bounceCount;
 	int bounceMax = 20;
 	static double spawnRateDefault = 0.2;
 	
-	int deathTime = 10;		//DC: frames until ghost disappears
+	int deathTime = 10;
+	
+	//DC: added timers for power-ups
+	int speedTimer = 0;
+	int powerTimer = 100;
+	
+	float speedScale = (float)1.3;
+	float speedDefault;
+	//end changes
 
 	public Monster(PApplet p, float x, float y, float speed) {
 		this.parent = p;
@@ -28,6 +40,8 @@ public class Monster extends GameObject {
 		this.dx = 0;
 		this.dy = 0;
 		bounceCount = 0;
+		
+		speedDefault = speed;	//DC: added
 
 		monsters.add(this);
 	}
@@ -57,6 +71,10 @@ public class Monster extends GameObject {
 		x += dx;
 		y += dy;
 		if (bounceCount >0 ) bounceCount++;
+		
+		if (speedTimer == 1) speed = speedDefault;
+		if (speedTimer > 0 ) speedTimer--;			//DC: added speed variation
+
 	}
 
 	public void bounce(double x_move, double y_move){
@@ -65,6 +83,37 @@ public class Monster extends GameObject {
 	
 	//method to check collision with Obstacles and recalculate movement if needed
 	public void checkCollision(){
+		
+		//DC: adding collisions with power-ups in case of glitch
+		if(Application.powerUpThiefGlitch){
+			ArrayList<PowerUp> powerups = PowerUp.getPowerUps();
+			ArrayList<PowerUp> removeList = new ArrayList<PowerUp>();
+			
+			for(PowerUp p: powerups){
+				double dist = Math.hypot(p.getX() - x, p.getY() - y);
+				
+				if(dist < size/2 + p.getSize()/2){
+					switch(p.getType()) {
+					case 1:
+						addLife();
+						break;
+					case 2:
+						speedUp();
+						break;
+					case 3:
+						tripleFire();
+						break;
+					case 4:
+						rapidFire();
+						break;
+					}
+					removeList.add(p);
+				}
+			}
+			
+			powerups.removeAll(removeList);
+		}
+		
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
 		
 		int collision = 0;
@@ -122,13 +171,43 @@ public class Monster extends GameObject {
 	public void kill(){
 		deadMonsters.add(this);
 	}
+	
+	//DC: added power-up related methods
+	
+	//if monster gets an extra life power-up
+	//it adds an extra monster in the same spot, with a slower speed
+	private void addLife(){
+		Monster m = new Monster(parent, x,y,(float)(speed*0.9));
+		extraMonsters.add(m);
+	}
+	
+	//speeds up by a factor of 1.5 if it gets a speed power-up
+	private void speedUp(){
+		speedTimer += powerTimer;
+		speed = speedDefault*speedScale;
+	}
+	
+	private void tripleFire(){
+		
+		
+	}
+	
+	private void rapidFire(){
+		
+	}
+
+	public static ArrayList<Monster> getExtraMonsters(){
+		return extraMonsters;
+	}
+	
+	//end of changes
 
 	public static ArrayList<Monster> getMonsters() {
 		return monsters;
 	}
 
 
-	public static void showMonsters() {
+	public static void showMonsters() {		
 		for (Monster o : monsters) {
 			o.parent.fill(255);
 			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT

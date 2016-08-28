@@ -54,6 +54,7 @@ public class Application extends PApplet {
 	boolean hydraGlitch = false;
 	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
 	public static boolean teleportGlitch = false;			//some monsters teleport
+	public static boolean powerUpThiefGlitch = false;				//monsters steal power-ups
 	
 	File gunShot;
 	File death1;
@@ -223,6 +224,8 @@ public class Application extends PApplet {
 //			hydraGlitch = true;
 //		}
 
+		manyPowerUpsGlitch = true;
+		powerUpThiefGlitch = true;
 		
 		fill(0);
 		rect(0, 0, 900, 30);
@@ -347,7 +350,8 @@ public class Application extends PApplet {
 						player.resetPowerUps();
 						lastClick = 0;
 						return;
-					} else {
+					}
+					else {
 						m.setMove(player.getX(), player.getY());
 					}
 				}
@@ -361,6 +365,12 @@ public class Application extends PApplet {
 		}
 
 		gameObjects.removeAll(removeList);
+		
+		if(powerUpThiefGlitch){
+			ArrayList<Monster> extraMonsters = Monster.getExtraMonsters();
+			gameObjects.addAll(extraMonsters);
+			extraMonsters.clear();
+		}
 
 	}
 
@@ -380,5 +390,6 @@ public class Application extends PApplet {
 			SpawnPoint.spawn(this, gameObjects);
 		}
 	}
+
 
 }

@@ -45,6 +45,9 @@ public class SnakeMonster extends Monster{
 
 		if (bounceCount >0 ) bounceCount++;
 		this.time++;
+		
+		if (speedTimer == 1) speed = speedDefault;
+		if (speedTimer > 0 ) speedTimer--;			//DC: added speed variation
 	}
 
 }
