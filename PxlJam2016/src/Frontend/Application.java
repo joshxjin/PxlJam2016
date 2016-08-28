@@ -405,11 +405,10 @@ public class Application extends PApplet {
 			ArrayList<Monster> extraMonsters = Monster.getExtraMonsters();
 			gameObjects.addAll(extraMonsters);
 			extraMonsters.clear();
+			ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
+			gameObjects.addAll(extraBullets);
+			extraBullets.clear();
 		}
-		
-		ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
-		gameObjects.addAll(extraBullets);
-		extraBullets.clear();
 	}
 
 	public void levelSpawn() {
@@ -427,6 +426,7 @@ public class Application extends PApplet {
 			manyPowerUpsGlitch = false;
 			runawayGlitch = false;
 			teleportGlitch = false;
+			powerUpThiefGlitch = false;
 
 			generateGlitch();
 		}
