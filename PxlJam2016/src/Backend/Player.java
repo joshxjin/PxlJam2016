@@ -62,11 +62,26 @@ public class Player extends GameObject {
 
 		
 		//counting down the various timers
-		if(speedTimer == 1) speedScale = 0;
-		if(rapidFireTimer == 1) rapidDelay = 20;
-		if(speedTimer > 0) speedTimer--;
-		if(tripleFireTimer > 0) tripleFireTimer--;
-		if(rapidFireTimer > 0) rapidFireTimer--;
+		if(speedTimer == 1) 
+			speedScale = 0;
+		if(rapidFireTimer == 1) {
+			if (tripleFireTimer > 0)
+				rapidDelay = 12;
+			else 
+				rapidDelay = 20;
+		}
+		if (tripleFireTimer == 1) {
+			if (rapidFireTimer > 0)
+				rapidDelay = 2;
+			else 
+				rapidDelay = 20;
+		}
+		if(speedTimer > 0) 
+			speedTimer--;
+		if(tripleFireTimer > 0) 
+			tripleFireTimer--;
+		if(rapidFireTimer > 0) 
+			rapidFireTimer--;
 
 		ArrayList<Obstacle> ob = Obstacle.getObstacles();
 
@@ -172,11 +187,12 @@ public class Player extends GameObject {
 	
 	private void tripleFire(){
 		tripleFireTimer += powerTime;
+		rapidDelay = 12;
 	}
 	
 	private void rapidFire(){
 		rapidFireTimer += powerTime;
-		rapidDelay = 0;
+		rapidDelay = 2;
 	}
 	
 	public void resetPowerUps(){
