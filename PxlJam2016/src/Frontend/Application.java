@@ -114,13 +114,14 @@ public class Application extends PApplet {
 		playBackground(backgroundMusic);
 
 		try {
-			video = new Capture(this, 800, 600);
+			video = new Capture(this, 1800, 600);
 			video.start();
 			temp = createImage(800, 600, RGB);
 			dImage = createImage(800, 600, RGB);
 			videoEnabled = true;
 		} catch (Exception e) {
 			try {
+				video.stop();
 				video = new Capture(this, 640, 480);
 				video.start();
 				temp = createImage(640, 480, RGB);
@@ -129,7 +130,7 @@ public class Application extends PApplet {
 			} catch (Exception e1) {
 				videoEnabled = false;
 			}
-		}
+		} 
 	}
 
 	public void captureEvent(Capture video) {
@@ -145,7 +146,7 @@ public class Application extends PApplet {
 			Clip clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(sound));
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
-			Thread.sleep(10);
+			Thread.sleep(1);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -309,9 +310,7 @@ public class Application extends PApplet {
 							Monster.getMonsters().remove(m);
 							m.kill();
 							if (m instanceof SnakeMonster) {
-								score += snakeMonsterScore; // DC: increment
-															// score if monster
-															// killed
+								score += snakeMonsterScore; // DC: increment score if monster killed
 								playSound(death1);
 								if (hydraGlitch) {
 									SnakeMonster m1 = new SnakeMonster(this, m.getX(), m.getY(), m.getSpeed());
@@ -349,13 +348,7 @@ public class Application extends PApplet {
 							textAlign(CENTER);
 							text("Game Over!", 450, 450);
 							textSize(18);
-							text("You scored " + score + " points!", 450, 470); // DC:
-																				// display
-																				// final
-																				// score
-																				// on
-																				// Game
-																				// Over
+							text("You scored " + score + " points!", 450, 470);
 							text("Click mouse to restart.", 450, 490);
 							Obstacle.getObstacles().clear();
 							SpawnPoint.getSpawnPoints().clear();
