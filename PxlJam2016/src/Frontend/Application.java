@@ -88,9 +88,6 @@ public class Application extends PApplet {
 	public void setup() {
 		frameRate(60);
 
-		player = new Player(this, 450, 450);
-		gameObjects.add(player);
-
 		monsterPic = loadImage("monster1.png");// IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");// IMAGE RELEVANT
 		shipPic = loadImage("AVerySillyShip2.png");// IMAGE RELEVANT
@@ -172,7 +169,7 @@ public class Application extends PApplet {
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
-			generateGlitch();
+			//generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
@@ -358,8 +355,7 @@ public class Application extends PApplet {
 			} else if (gameObjects.get(i) instanceof Monster) {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
-					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(),
-							m.getY() - returnList.get(j).getY()));
+					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
 						player.setHealth(player.getHealth() - 1);
