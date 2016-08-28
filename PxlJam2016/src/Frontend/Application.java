@@ -167,7 +167,16 @@ public class Application extends PApplet {
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
-	//		generateGlitch();
+
+			// reset all glitches
+			videoGlitch = false;
+			hydraGlitch = false;
+			switchGlitch = false;
+			manyPowerUpsGlitch = false;
+			runawayGlitch = false;
+			teleportGlitch = false;
+			powerUpThiefGlitch = false;
+			//generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
@@ -353,8 +362,7 @@ public class Application extends PApplet {
 			} else if (gameObjects.get(i) instanceof Monster) {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
-					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(),
-							m.getY() - returnList.get(j).getY()));
+					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
 						player.setHealth(player.getHealth() - 1);
@@ -427,6 +435,7 @@ public class Application extends PApplet {
 			manyPowerUpsGlitch = false;
 			runawayGlitch = false;
 			teleportGlitch = false;
+			powerUpThiefGlitch = false;
 
 			generateGlitch();
 		}
