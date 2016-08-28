@@ -12,7 +12,7 @@ public class TeleportMonster extends Monster {
 	public TeleportMonster(PApplet p, float x, float y, float speed) {
 		super(p, x, y, speed);
 		// TODO Auto-generated constructor stub
-		time = (int)(Math.random()*100 + 20);
+		time = (int)(Math.random()*180 + 60);			//DC: change time settings
 	}
 	
 	public void setMove(float playerX, float playerY){
@@ -91,7 +91,7 @@ public class TeleportMonster extends Monster {
 		x = xNew;
 		y = yNew;
 		
-		time = (int)(Math.random() * 100 + 20);
+		time = (int)(Math.random() * 180 + 60);		//DC: changed time settings
 		}
 }
 
