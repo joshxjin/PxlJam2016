@@ -3,6 +3,7 @@ package Frontend;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -34,7 +35,8 @@ public class Application extends PApplet {
 	public static PImage rapidFirePowerUp;
 	public static PImage deadMonsterPic;
 	public static PImage deadSnakeMonsterPic;
-	
+	static PImage bigMonster;
+
 	Player player;
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	QuadTree qt = new QuadTree(0, new Rectangle(0, 0, 900, 900));
@@ -44,24 +46,29 @@ public class Application extends PApplet {
 	int spawnFrame = 100;
 	int lastClick = 0;
 	boolean gameOver = false;
+	boolean gameStart = true;
 	boolean mPressed = false;
 
-	
-	int score = 0;		//DC: added score counter
+	int score = 0; // DC: added score counter
 	int snakeMonsterScore = 10;
 	int monsterScore = 5;
 
+	boolean videoEnabled = false;
+	boolean videoGlitch = false;
 	boolean hydraGlitch = false;
-	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
-	public static boolean teleportGlitch = false;			//some monsters teleport
-	public static boolean powerUpThiefGlitch = false;				//monsters steal power-ups
-	
+
+	public static boolean powerUpThiefGlitch = false;
+	public static boolean switchGlitch = false; // Every monster looks like a ship, the ship looks like a monster
+	public static boolean manyPowerUpsGlitch = false; // Every monster drops a power-up
+	public static boolean runawayGlitch = false; // power ups run away from player
+	public static boolean teleportGlitch = false; // some monsters teleport
+
 	File gunShot;
 	File death1;
 	File death2;
 	File explosion;
 	File backgroundMusic;
-	
+
 	double threshhold = 15;
 	Capture video;
 	PImage temp;
@@ -82,78 +89,95 @@ public class Application extends PApplet {
 		player = new Player(this, 450, 450);
 		gameObjects.add(player);
 
-		Levels.loadLevel(this, player, gameObjects, level);
-
-
 		monsterPic = loadImage("monster1.png");// IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");// IMAGE RELEVANT
 		shipPic = loadImage("AVerySillyShip2.png");// IMAGE RELEVANT
 		heart = loadImage("heart.png");// IMAGE RELEVANT
 		rock = loadImage("definitelyARock.png"); // IMAGE RELEVANT
-		
+
 		deadMonsterPic = loadImage("monster1dead.png");
 		deadSnakeMonsterPic = loadImage("monster2dead.png");
-		
+
 		lifePowerUp = loadImage("lifePowerUp.png");
 		speedPowerUp = loadImage("speedPowerUp.png");
 		tripleFirePowerUp = loadImage("TripleShotPowerUp.png");
 		rapidFirePowerUp = loadImage("rapidFirePowerUp.png");
 		
+		bigMonster = loadImage("bigMonster.png");
+
 		gunShot = new File("src/gunShot.wav");
 		death1 = new File("src/death1.wav");
 		death2 = new File("src/death2.wav");
 		explosion = new File("src/explosion.wav");
 		backgroundMusic = new File("src/backgroundMusic.wav");
 		playBackground(backgroundMusic);
-		
-		video = new Capture(this, 800, 600);
-		video.start();
-		temp = createImage(800, 600, RGB);
-		dImage = createImage(800, 600, RGB);
+
+		try {
+			video = new Capture(this, 1800, 600);
+			video.start();
+			temp = createImage(800, 600, RGB);
+			dImage = createImage(800, 600, RGB);
+			videoEnabled = true;
+		} catch (Exception e) {
+			try {
+				video.stop();
+				video = new Capture(this, 640, 480);
+				video.start();
+				temp = createImage(640, 480, RGB);
+				dImage = createImage(640, 480, RGB);
+				videoEnabled = true;
+			} catch (Exception e1) {
+				videoEnabled = false;
+			}
+		} 
 	}
-	
+
 	public void captureEvent(Capture video) {
-		temp.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
-		temp.updatePixels();
-		video.read();
+		if (videoEnabled) {
+			temp.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
+			temp.updatePixels();
+			video.read();
+		}
 	}
-	
+
 	public void playBackground(File sound) {
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(sound));
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
-			Thread.sleep(10);
-		} catch(Exception e) {
+			Thread.sleep(1);
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void playSound(File sound) {
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(sound));
 			clip.start();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 
 	public void mousePressed() {
 		// click to restart game.
-		if (gameOver) {
+		if (gameOver || gameStart) {
+			gameStart = false;
 			gameOver = false;
 			player = new Player(this, 450, 450);
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
+			generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
 			lastClick = 0;
 			return;
 		}
-		
+
 		if (frameCount - lastClick >= player.getDelay() - 5) {
 			lastClick = frameCount;
 			playSound(gunShot);
@@ -161,7 +185,7 @@ public class Application extends PApplet {
 		}
 		mPressed = true;
 	}
-	
+
 	public void mouseReleased() {
 		mPressed = false;
 	}
@@ -179,68 +203,76 @@ public class Application extends PApplet {
 		if (gameOver) {
 			return;
 		}
-		
+
 		// check if mouse is held down and shoot every 20 frames
 		if (mPressed && frameCount - lastClick > player.getDelay()) {
 			playSound(gunShot);
 			lastClick = frameCount;
 			player.shoot(gameObjects);
 		}
-		
+
 		// draw background and border
 		background(255);
-		
-		temp.loadPixels();
-		dImage.loadPixels();
-		video.loadPixels();
-		
-		for (int x = 0; x < video.width; x++) {
-			for (int y = 0; y < video.height; y++) {
-				int loc = x + y * video.width;
-				float r1 = red(video.pixels[loc]);
-				float g1 = green(video.pixels[loc]);
-				float b1 = blue(video.pixels[loc]);
-				float r2 = red(temp.pixels[loc]);
-				float g2 = green(temp.pixels[loc]);
-				float b2 = blue(temp.pixels[loc]);
-				
-				double d = Math.sqrt(Math.pow(r1-r2, 2)+Math.pow(g1-g2, 2)+Math.pow(b1-b2, 2));
-				if (d < threshhold) {
-					dImage.pixels[loc] = color(255);
-				} else {
-					dImage.pixels[loc] = color(200);
+
+		if (videoEnabled) {
+			// run image comparison algorithm if there is a compatible webcam
+			temp.loadPixels();
+			dImage.loadPixels();
+			video.loadPixels();
+
+			for (int x = 0; x < video.width; x++) {
+				for (int y = 0; y < video.height; y++) {
+					int loc = x + y * video.width;
+					float r1 = red(video.pixels[loc]);
+					float g1 = green(video.pixels[loc]);
+					float b1 = blue(video.pixels[loc]);
+					float r2 = red(temp.pixels[loc]);
+					float g2 = green(temp.pixels[loc]);
+					float b2 = blue(temp.pixels[loc]);
+
+					double d = Math.sqrt(Math.pow(r1 - r2, 2) + Math.pow(g1 - g2, 2) + Math.pow(b1 - b2, 2));
+					if (d < threshhold) {
+						dImage.pixels[loc] = color(255);
+					} else {
+						dImage.pixels[loc] = color(200);
+					}
 				}
 			}
-		}
-		dImage.updatePixels();
-		
-//		if (level % 9 == 0) {
-//			
-//		} else if (level % 6 == 0) {
-//			hydraGlitch = true;
-//		} else if (level % 3 == 0) {
-//			image(dImage, 450, 450);
-//		} else if (level == 2) {
-//			hydraGlitch = true;
-//		}
+			dImage.updatePixels();
 
-		manyPowerUpsGlitch = true;
-		powerUpThiefGlitch = true;
-		
+			if (videoGlitch)
+				image(dImage, 450, 450);
+		}
+
 		fill(0);
 		rect(0, 0, 900, 30);
 		rect(0, 0, 30, 900);
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
 		
+		if (gameStart) {
+			// draw starting screen
+			imageMode(CENTER);
+			image(bigMonster, 450, 300);
+			textSize(36);
+			fill(0);
+			textAlign(CENTER);
+			text("Glitch-neric Shooter", 450, 550);
+			textSize(18);
+			text("by Il Pax Jem", 450, 600);
+			textSize(12);
+			text("Deborah Crook, Josh Jin, Michael Ball", 450, 620);
+			text("GitHub: debcrook, joshxjin, mbtestfeed", 450, 640);
+			textSize(18);
+			text("WASD or arrow keys to move, mouse to aim, click to shoot.", 450, 680);
+			text("Click mouse to start.", 450, 700);
+			return;
+		}
+
 		textAlign(LEFT);
 		textSize(12);
-//		text("Frame: " + frameCount, 780, 50);
-		text("Time: " + frameCount/60 + " s", 780, 50);			//DC: changed frame count to time passed
-		
-		text("Level: " + level, 780, 63);
-		
-		text("Score: " + score, 780, 76);					//DC: added score display
+		text("Level: " + level, 780, 50);
+		text("Score: " + score, 780, 63); // DC: added score display
 
 		// spawn Monster
 		levelSpawn();
@@ -258,7 +290,10 @@ public class Application extends PApplet {
 		Monster.showMonsters();
 
 		Obstacle.showObstacles();
-		
+
+		if (runawayGlitch) {
+			PowerUp.movePowerUps(player.getX(), player.getY());
+		}
 		PowerUp.showPowerUps();
 	}
 
@@ -276,7 +311,7 @@ public class Application extends PApplet {
 
 			returnList.clear();
 			qt.retrieve(returnList, gameObjects.get(i));
-			
+
 			if (gameObjects.get(i) instanceof Bullet) {
 
 				Bullet b = (Bullet) gameObjects.get(i);
@@ -284,7 +319,8 @@ public class Application extends PApplet {
 					float d = (float) (Math.hypot(b.getX() - returnList.get(j).getX(),
 							b.getY() - returnList.get(j).getY()));
 
-					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player) && !(returnList.get(j) instanceof Bullet)) {
+					if (d <= (b.getSize() + returnList.get(j).getSize()) / 2 && !(returnList.get(j) instanceof Player)
+							&& !(returnList.get(j) instanceof Bullet)) {
 						if (returnList.get(j) instanceof Monster) {
 							Monster m = (Monster) returnList.get(j);
 							removeList.add(b);
@@ -293,14 +329,14 @@ public class Application extends PApplet {
 							Monster.getMonsters().remove(m);
 							m.kill();
 							if (m instanceof SnakeMonster) {
-								score += snakeMonsterScore;			//DC: increment score if monster killed
+								score += snakeMonsterScore; // DC: increment score if monster killed
 								playSound(death1);
 								if (hydraGlitch) {
 									SnakeMonster m1 = new SnakeMonster(this, m.getX(), m.getY(), m.getSpeed());
 									newObjects.add(m1);
 								}
 							} else {
-								score += monsterScore;				//and here
+								score += monsterScore; // and here
 								playSound(death2);
 								if (hydraGlitch) {
 									Monster m1 = new Monster(this, m.getX(), m.getY(), m.getSpeed());
@@ -320,22 +356,23 @@ public class Application extends PApplet {
 			} else if (gameObjects.get(i) instanceof Monster) {
 				Monster m = (Monster) gameObjects.get(i);
 				for (int j = 0; j < returnList.size(); j++) {
-					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(), m.getY() - returnList.get(j).getY()));
+					float d = (float) (Math.hypot(m.getX() - returnList.get(j).getX(),
+							m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
-						//player.setHealth(player.getHealth() - 1);
+						player.setHealth(player.getHealth() - 1);
 						if (player.getHealth() == 0) {
 							gameOver = true;
 							textSize(30);
 							textAlign(CENTER);
 							text("Game Over!", 450, 450);
 							textSize(18);
-							text("You scored " + score + " points!", 450, 470);			//DC: display final score on Game Over
+							text("You scored " + score + " points!", 450, 470);
 							text("Click mouse to restart.", 450, 490);
 							Obstacle.getObstacles().clear();
 							SpawnPoint.getSpawnPoints().clear();
 							gameObjects.clear();
-							score = 0;						//DC: reset score on Game Over
+							score = 0; // DC: reset score on Game Over
 						} else {
 							player.setX(450);
 							player.setY(450);
@@ -359,7 +396,7 @@ public class Application extends PApplet {
 			}
 
 		}
-		
+
 		if (!newObjects.isEmpty()) {
 			gameObjects.addAll(newObjects);
 		}
@@ -371,12 +408,16 @@ public class Application extends PApplet {
 			gameObjects.addAll(extraMonsters);
 			extraMonsters.clear();
 		}
+
+		if(powerUpThiefGlitch){
+			ArrayList<Monster> extraMonsters = Monster.getExtraMonsters();
+			gameObjects.addAll(extraMonsters);
+			extraMonsters.clear();
+		}
 		
 		ArrayList<Bullet> extraBullets = Monster.getExtraBullets();
 		gameObjects.addAll(extraBullets);
 		extraBullets.clear();
-		
-
 	}
 
 	public void levelSpawn() {
@@ -386,13 +427,64 @@ public class Application extends PApplet {
 			level++;
 			Levels.loadLevel(this, player, gameObjects, level);
 			spawnFrame = spawnFrame - 5;
-			if (hydraGlitch)
-				hydraGlitch = false;
+
+			// reset all glitches
+			videoGlitch = false;
+			hydraGlitch = false;
+			switchGlitch = false;
+			manyPowerUpsGlitch = false;
+			runawayGlitch = false;
+			teleportGlitch = false;
+
+			generateGlitch();
 		}
 
 		// spawn monster
 		if (frameCount % spawnFrame == 0) {
 			SpawnPoint.spawn(this, gameObjects);
+		}
+	}
+
+	public void generateGlitch() {
+		Random r = new Random();
+		int chance;
+		if (videoEnabled) {
+			chance = 14;
+		} else {
+			chance = 12;
+		}
+		switch (r.nextInt(chance)) {
+		case 0:
+			videoGlitch = true;
+			//System.out.println("videoGlitch");
+			break;
+		case 1:
+			hydraGlitch = true;
+			//System.out.println("hydraGlitch");
+			break;
+		case 2:
+			switchGlitch = true;
+			//System.out.println("switchGlitch");
+			break;
+		case 3:
+			manyPowerUpsGlitch = true;
+			//System.out.println("manyPowerUpsGlitch");
+			break;
+		case 4:
+			runawayGlitch = true;
+			//System.out.println("runawayGlitch");
+			break;
+		case 5:
+			teleportGlitch = true;
+			//System.out.println("teleportGlitch");
+			break;
+		case 6:
+			powerUpThiefGlitch = true;
+			//System.out.println("powerUpTheifGlitch");
+			break;
+		default:
+			//System.out.println("normal mode");
+			break;
 		}
 	}
 
