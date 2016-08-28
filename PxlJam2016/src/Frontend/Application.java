@@ -35,6 +35,7 @@ public class Application extends PApplet {
 	public static PImage rapidFirePowerUp;
 	public static PImage deadMonsterPic;
 	public static PImage deadSnakeMonsterPic;
+	static PImage bigMonster;
 	
 	Player player;
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
@@ -99,6 +100,8 @@ public class Application extends PApplet {
 		speedPowerUp = loadImage("speedPowerUp.png");
 		tripleFirePowerUp = loadImage("TripleShotPowerUp.png");
 		rapidFirePowerUp = loadImage("rapidFirePowerUp.png");
+		
+		bigMonster = loadImage("bigMonster.png");
 		
 		gunShot = new File("src/gunShot.wav");
 		death1 = new File("src/death1.wav");
@@ -217,16 +220,22 @@ public class Application extends PApplet {
 		dImage.updatePixels();
 		
 		if (gameStart) {
-			textSize(30);
+			imageMode(CENTER);
+			image(bigMonster, 450, 300);
+			textSize(36);
 			fill(0);
 			textAlign(CENTER);
-			text("Game Over!", 450, 450);
+			text("Glitch-neric Shooter", 450, 550);
 			textSize(18);
-			text("by Il Pax Jem", 450, 470);			//DC: display final score on Game Over
-			text("WASD or arrow keys to move, mouse to aim, click to shoot.", 450, 490);
-			text("Click mouse to start.", 450, 510);
+			text("by Il Pax Jem", 450, 600);
+			textSize(12);
+			text("Deborah Crook, Josh Jin, Michael Ball", 450, 620);
+			text("GitHub: debcrook, joshxjin, mbtestfeed", 450, 640);
+			textSize(18);
+			text("WASD or arrow keys to move, mouse to aim, click to shoot.", 450, 680);
+			text("Click mouse to start.", 450, 700);
 			return;
-		} else 
+		}
 		
 //		if (level % 9 == 0) {
 //			
