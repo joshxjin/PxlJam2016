@@ -51,6 +51,7 @@ public class Application extends PApplet {
 	int snakeMonsterScore = 10;
 	int monsterScore = 5;
 
+	boolean videoHiRes = false;
 	boolean videoEnabled = false;
 	boolean videoGlitch = false;
 	boolean hydraGlitch = false;
@@ -114,13 +115,14 @@ public class Application extends PApplet {
 		playBackground(backgroundMusic);
 
 		try {
-			video = new Capture(this, 800, 600);
+			video = new Capture(this, 1800, 600);
 			video.start();
 			temp = createImage(800, 600, RGB);
 			dImage = createImage(800, 600, RGB);
 			videoEnabled = true;
 		} catch (Exception e) {
 			try {
+				video.stop();
 				video = new Capture(this, 640, 480);
 				video.start();
 				temp = createImage(640, 480, RGB);
@@ -129,7 +131,7 @@ public class Application extends PApplet {
 			} catch (Exception e1) {
 				videoEnabled = false;
 			}
-		}
+		} 
 	}
 
 	public void captureEvent(Capture video) {
