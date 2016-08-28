@@ -15,7 +15,7 @@ public class Monster extends GameObject {
 
 	int bounceCount;
 	int bounceMax = 20;
-	double spawnRate = 0.2;
+	static double spawnRateDefault = 0.2;
 	
 	int deathTime = 10;		//DC: frames until ghost disappears
 
@@ -132,21 +132,36 @@ public class Monster extends GameObject {
 		for (Monster o : monsters) {
 			o.parent.fill(255);
 			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
-			if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
-				o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
-			} else{//IMAGE RELEVANT
-				o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
-			}//IMAGE RELEVANT
-			
+			if (Application.playerMonsterSwitchGlitch == true){
+				if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
+					o.parent.image(Application.shipPic, o.x, o.y);//IMAGE RELEVANT
+				} else{//IMAGE RELEVANT
+					o.parent.image(Application.shipPic, o.x, o.y);//IMAGE RELEVANT	
+				}//IMAGE RELEVANT
+			}else{
+				if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
+					o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
+				} else{//IMAGE RELEVANT
+					o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
+				}//IMAGE RELEVANT
+			}
 		}
 		
 		//DC: shows dead monsters and removes them from the list when appropriate
 		ArrayList<Monster> removeList = new ArrayList<Monster>();
 		PowerUp p;
+		
+		double spawnRate;
+		if(Application.manyPowerUpsGlitch){
+			spawnRate = 1;
+		}
+		else spawnRate = spawnRateDefault;
+		
 		for (Monster o: deadMonsters){
+
 			if (o.deathTime == 0){
 				removeList.add(o);
-				if(Math.random() < o.spawnRate){
+				if(Math.random() < spawnRate){
 					switch((int)(Math.random()*4 + 1)){
 					case 1:
 						p = new PowerUp(o.parent,o.x,o.y,1);

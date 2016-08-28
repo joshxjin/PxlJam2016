@@ -267,7 +267,11 @@ public class Player extends GameObject {
 		parent.translate(x, y);
 		parent.rotate(angle);
 		// parent.ellipse(0, 0, size, size);
-		parent.image(Application.shipPic, 0, 0); // IMAGE RELEVANT
+		if (Application.playerMonsterSwitchGlitch == true){
+			parent.image(Application.monsterPic, 0, 0);
+		} else {
+			parent.image(Application.shipPic, 0, 0); // IMAGE RELEVANT
+		}
 		parent.popMatrix();
 	}
 	
