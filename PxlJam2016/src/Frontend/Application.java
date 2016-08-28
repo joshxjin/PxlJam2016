@@ -167,7 +167,7 @@ public class Application extends PApplet {
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
-			generateGlitch();
+	//		generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
@@ -271,9 +271,6 @@ public class Application extends PApplet {
 		text("Level: " + level, 780, 50);
 		text("Score: " + score, 780, 63); // DC: added score display
 
-		
-		powerUpThiefGlitch = true;
-		manyPowerUpsGlitch = true;
 		// spawn Monster
 		levelSpawn();
 
