@@ -342,7 +342,7 @@ public class Application extends PApplet {
 							m.getY() - returnList.get(j).getY()));
 					if (d <= (m.getSize() + returnList.get(j).getSize()) / 2 && returnList.get(j) instanceof Player) {
 						// Player lose health and die/game over
-						// player.setHealth(player.getHealth() - 1);
+						player.setHealth(player.getHealth() - 1);
 						if (player.getHealth() == 0) {
 							gameOver = true;
 							textSize(30);
