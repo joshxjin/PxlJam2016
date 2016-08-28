@@ -267,12 +267,19 @@ public class Monster extends GameObject {
 		for (Monster o : monsters) {
 			o.parent.fill(255);
 			//o.parent.ellipse(o.x, o.y, o.size, o.size); //IMAGE RELEVANT
-			if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
-				o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
-			} else{//IMAGE RELEVANT
-				o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
-			}//IMAGE RELEVANT
-			
+			if (Application.switchGlitch == true){
+				if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
+					o.parent.image(Application.shipPic, o.x, o.y);//IMAGE RELEVANT
+				} else{//IMAGE RELEVANT
+					o.parent.image(Application.shipPic, o.x, o.y);//IMAGE RELEVANT	
+				}//IMAGE RELEVANT
+			}else{
+				if (o.getClass() == SnakeMonster.class){//IMAGE RELEVANT
+					o.parent.image(Application.snakeMonsterPic, o.x, o.y);//IMAGE RELEVANT
+				} else{//IMAGE RELEVANT
+					o.parent.image(Application.monsterPic, o.x, o.y);//IMAGE RELEVANT	
+				}//IMAGE RELEVANT
+			}
 		}
 		
 		//DC: shows dead monsters and removes them from the list when appropriate
