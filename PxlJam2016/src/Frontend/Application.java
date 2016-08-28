@@ -45,6 +45,7 @@ public class Application extends PApplet {
 	int spawnFrame = 100;
 	int lastClick = 0;
 	boolean gameOver = false;
+	boolean gameStart = true;
 	boolean mPressed = false;
 
 	
@@ -106,10 +107,10 @@ public class Application extends PApplet {
 		backgroundMusic = new File("src/backgroundMusic.wav");
 		playBackground(backgroundMusic);
 		
-		video = new Capture(this, 800, 600);
+		video = new Capture(this, 640, 480);
 		video.start();
-		temp = createImage(800, 600, RGB);
-		dImage = createImage(800, 600, RGB);
+		temp = createImage(640, 480, RGB);
+		dImage = createImage(640, 480, RGB);
 	}
 	
 	public void captureEvent(Capture video) {
@@ -141,7 +142,8 @@ public class Application extends PApplet {
 
 	public void mousePressed() {
 		// click to restart game.
-		if (gameOver) {
+		if (gameOver || gameStart) {
+			gameStart = false;
 			gameOver = false;
 			player = new Player(this, 450, 450);
 			gameObjects.add(player);
@@ -176,7 +178,7 @@ public class Application extends PApplet {
 
 	public void draw() {
 		// do nothing if game over is showing.
-		if (gameOver) {
+		if (gameOver){
 			return;
 		}
 		
@@ -213,6 +215,18 @@ public class Application extends PApplet {
 			}
 		}
 		dImage.updatePixels();
+		
+		if (gameStart) {
+			textSize(30);
+			fill(0);
+			textAlign(CENTER);
+			text("Game Over!", 450, 450);
+			textSize(18);
+			text("by Il Pax Jem", 450, 470);			//DC: display final score on Game Over
+			text("WASD or arrow keys to move, mouse to aim, click to shoot.", 450, 490);
+			text("Click mouse to start.", 450, 510);
+			return;
+		} else 
 		
 //		if (level % 9 == 0) {
 //			
