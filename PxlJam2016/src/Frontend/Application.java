@@ -35,6 +35,7 @@ public class Application extends PApplet {
 	public static PImage rapidFirePowerUp;
 	public static PImage deadMonsterPic;
 	public static PImage deadSnakeMonsterPic;
+	public static PImage bigMonster;
 
 	Player player;
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
@@ -45,6 +46,7 @@ public class Application extends PApplet {
 	int spawnFrame = 100;
 	int lastClick = 0;
 	boolean gameOver = false;
+	boolean gameStart = true;
 	boolean mPressed = false;
 
 	int score = 0; // DC: added score counter
@@ -89,8 +91,7 @@ public class Application extends PApplet {
 		player = new Player(this, 450, 450);
 		gameObjects.add(player);
 
-		Levels.loadLevel(this, player, gameObjects, level);
-		generateGlitch();
+		
 
 		monsterPic = loadImage("monster1.png");// IMAGE RELEVANT
 		snakeMonsterPic = loadImage("monster2.png");// IMAGE RELEVANT
@@ -105,6 +106,8 @@ public class Application extends PApplet {
 		speedPowerUp = loadImage("speedPowerUp.png");
 		tripleFirePowerUp = loadImage("TripleShotPowerUp.png");
 		rapidFirePowerUp = loadImage("rapidFirePowerUp.png");
+		
+		bigMonster = loadImage("bigMonster.png");
 
 		gunShot = new File("src/gunShot.wav");
 		death1 = new File("src/death1.wav");
@@ -164,12 +167,14 @@ public class Application extends PApplet {
 
 	public void mousePressed() {
 		// click to restart game.
-		if (gameOver) {
+		if (gameOver || gameStart) {
+			gameStart = false;
 			gameOver = false;
 			player = new Player(this, 450, 450);
 			gameObjects.add(player);
 			level = 1;
 			Levels.loadLevel(this, player, gameObjects, level);
+			generateGlitch();
 			frameCount = 0;
 			levelFrame = 900;
 			spawnFrame = 100;
@@ -241,12 +246,30 @@ public class Application extends PApplet {
 			if (videoGlitch)
 				image(dImage, 450, 450);
 		}
-
+		
 		fill(0);
 		rect(0, 0, 900, 30);
 		rect(0, 0, 30, 900);
 		rect(900 - 30, 0, 30, 900);
 		rect(0, 900 - 30, 900, 30);
+		
+		if (gameStart) {
+			imageMode(CENTER);
+			image(bigMonster, 450, 300);
+			textSize(36);
+			fill(0);
+			textAlign(CENTER);
+			text("Glitch-neric Shooter", 450, 550);
+			textSize(18);
+			text("by Il Pax Jem", 450, 600);
+			textSize(12);
+			text("Deborah Crook, Josh Jin, Michael Ball", 450, 620);
+			text("GitHub: debcrook, joshxjin, mbtestfeed", 450, 640);
+			textSize(18);
+			text("WASD or arrow keys to move, mouse to aim, click to shoot.", 450, 680);
+			text("Click mouse to start.", 450, 700);
+			return;
+		}
 
 		textAlign(LEFT);
 		textSize(12);
