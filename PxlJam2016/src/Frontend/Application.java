@@ -55,6 +55,8 @@ public class Application extends PApplet {
 	boolean hydraGlitch = false;
 	public static boolean switchGlitch = false; //Every monster looks like a ship, the ship looks like a monster
 	public static boolean manyPowerUpsGlitch = false;		//Every monster drops a power-up
+	public static boolean runawayGlitch = false; // power ups run away from player
+	public static boolean teleportGlitch = false; // some monsters teleport
 	
 	File gunShot;
 	File death1;
@@ -267,7 +269,11 @@ public class Application extends PApplet {
 
 		Obstacle.showObstacles();
 		
+		if (runawayGlitch) {
+			PowerUp.movePowerUps(player.getX(), player.getY());
+		}
 		PowerUp.showPowerUps();
+		
 	}
 
 	public void checkCollision() {
